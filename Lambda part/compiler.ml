@@ -47,7 +47,7 @@ let rec compile e = (match e with
   (* gets operand from the environment stack, and pushes it to the operand stack *)
   | Var i -> ("push_operand [ENVIRONMENT_POINTER - " ^ string_of_int ((i + 1) * 2) ^ "]\n", "")
   
-  (* in order to apply e1 to e2, first compile them, then pop the operands and call the retrieved function *)
+  (* in order to apply e1 to e2, first compile them, then pop the operands, push the parameter to the environment stack and call the retrieved function *)
   (* add any functions created by e1 and e2 to the function zone *)
   | Apply (e1, e2) -> let c1 = compile(e1) in let c2 = compile(e2) in
       ((fst c1) ^ (fst c2) ^ "pop_operand ax\npush_env ax\npop_operand ax\ncall ax\n", (snd c1) ^ (snd c2))
