@@ -47,7 +47,7 @@ program:
 expr:
   | Lambda Dot e = expr             {Ast.Lambda(e)}
   | LParens expr RParens            {$2}
-  | expr expr                       {Ast.Apply($1, $2)}
+/*   | expr expr                       {Ast.Apply($1, $2)} */
   | Index n = Number                {Ast.Var(n)}
   | aexpr                           {Ast.Aexp($1)}
   | bexpr                           {Ast.Bexp($1)}

@@ -66,19 +66,33 @@ call print_string
 
 
 	; GENERATED CODE WILL BE WRITTEN HERE
-	
-	; example: (lambda ((lambda (L0 + L1)) 5)) 6
+push_operand fun_1
+push_operand 4
+push_operand 6
+pop_operand ax
+pop_operand bx
+cmp ax, bx 
+jne branch_1
+push_operand 1
+jmp branch_2
+branch_1:
+push_operand 0
+branch_2:
+pop_operand ax
+cmp ax, 1 
+jne branch_3
+push_operand 3
 
-	; APPLY (e1 e2)
-	
-	push_operand fun_1		; compile e1
-	push_operand 6			; comple e2
-	
-	pop_operand ax			; APPLY
-	push_env ax
-	
-	pop_operand ax
-	call ax
+jmp branch_4
+branch_3:
+push_operand 64
+
+branch_4:
+pop_operand ax
+push_env ax
+pop_operand ax
+call ax
+
 	
 	; test print
 	
@@ -88,33 +102,14 @@ call print_string
 	jmp $
 	
 	
-	; fundef part
-	
-	fun_1:
-		; APPLY (e1 e2)
-		push_operand fun_2	; compile e1
-		push_operand 5		; compile e2
-		
-		pop_operand ax
-		push_env ax
-		
-		pop_operand ax
-		call ax
-		
-		ret
-	
-	fun_2:
-		; e1 + e2 
-		push_operand [ENVIRONMENT_POINTER - 2]		; compile e1
-		push_operand [ENVIRONMENT_POINTER - 4]		; compile e2
-		
-		pop_operand ax		; +
-		pop_operand bx
-		add ax, bx
-		
-		push_operand ax		; return value
-		
-		ret
+fun_1:
+push_operand 5
+push_operand [ENVIRONMENT_POINTER - 2]
+pop_operand ax
+pop_operand bx
+add ax, bx
+push_operand ax
+ret
 
 
 %include"./utils/print_string.asm"
