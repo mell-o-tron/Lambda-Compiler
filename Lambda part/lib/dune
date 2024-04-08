@@ -1,2 +1,10 @@
 (library
- (name LambdaCompiler))
+ (name LambdaCompiler)
+ (libraries sedlex)
+ (preprocess
+  (pps ppx_deriving.show sedlex.ppx)))
+
+(menhir
+ (modules parser)
+ (explain true)
+ (flags --dump --strict))

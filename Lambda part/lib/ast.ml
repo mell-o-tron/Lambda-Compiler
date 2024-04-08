@@ -1,20 +1,27 @@
 type aunop = Neg
-type abinop = Plus
+[@@deriving show]
+type abinop = Plus | Minus | Times
+[@@deriving show]
 
 type bunop = Not
+[@@deriving show]
 type bbinop = And | Or
-type comparator = Equals | LessThan
+[@@deriving show]
+type comparator = Equals | LessThan | GreaterThan | LessEqual | GreaterEqual | NotEqual
+[@@deriving show]
 
 (* Syntax of the language *)
 type aexp =
-  | ABinop      of abinop * aexp * aexp
-  | AUnop       of aunop * aexp
+  | ABinop      of abinop * exp * exp
+  | AUnop       of aunop * exp
   | IntConst    of int
+  [@@deriving show]
 and bexp =
-  | BBinop      of bbinop * bexp * bexp
-  | BUnop       of bunop * bexp
-  | Compare     of comparator * aexp * aexp
+  | BBinop      of bbinop * exp * exp
+  | BUnop       of bunop * exp
+  | Compare     of comparator * exp * exp
   | BoolConst   of bool
+  [@@deriving show]
 and exp =
   | Lambda      of exp
   | Apply       of exp * exp
@@ -22,3 +29,4 @@ and exp =
   | Aexp        of aexp
   | Bexp        of bexp
   | Var         of int
+  [@@deriving show]

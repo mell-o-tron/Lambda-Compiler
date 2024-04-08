@@ -27,11 +27,12 @@ let rec compile (e: exp) = match e with
 
 and compile_aexp (a: aexp) = match a with 
   | ABinop (o, e1, e2) -> (match o with
-    | Plus -> let c1 = compile_aexp(e1) in let c2 = compile_aexp(e2) in
+    | Plus -> let c1 = compile(e1) in let c2 = compile(e2) in
     ((fst c1) ^ (fst c2) ^ "pop_operand ax\npop_operand bx\nadd ax, bx\npush_operand ax\n", (snd c1) ^ (snd c2))
+    | _ -> failwith "Not Implemented"
   )
   | AUnop (o, e1) -> (match o with
-    | Neg -> let c1 = compile_aexp(e1) in
+    | Neg -> let c1 = compile(e1) in
     ((fst c1) ^ "pop_operand ax\nneg ax\npush_operand ax\n", (snd c1))
   )
   | IntConst i  -> ("push_operand " ^ (string_of_int i) ^ "\n", "")

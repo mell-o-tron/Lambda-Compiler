@@ -1,0 +1,4 @@
+(λ.λ.
+    if L1
+        then 1
+        else L0)

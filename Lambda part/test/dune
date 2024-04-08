@@ -1,3 +1,14 @@
-(test
+(executable
  (name test_LambdaCompiler)
+ (modules test_LambdaCompiler)
  (libraries LambdaCompiler))
+
+(executable
+ (name test_Lexer)
+ (modules test_Lexer)
+ (libraries LambdaCompiler))
+
+(executable
+ (name test_Parser)
+ (modules test_Parser)
+ (libraries LambdaCompiler menhirLib))
