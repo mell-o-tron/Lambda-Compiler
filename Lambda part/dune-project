@@ -1,0 +1,22 @@
+(lang dune 3.14)
+
+(name LambdaCompiler)
+
+(generate_opam_files true)
+
+(source
+ (github mell-o-tron/Lambda-Bootloader))
+
+(authors "mell_o_tron" "Alex23087")
+
+(maintainers "mell_o_tron" "Alex23087")
+
+(license LICENSE)
+
+(documentation https://url/to/documentation)
+
+(package
+ (name LambdaCompiler)
+ (depends ocaml dune))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
