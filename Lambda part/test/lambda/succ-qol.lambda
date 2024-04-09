@@ -1,0 +1,9 @@
+(
+    (\lambda.(L0(L0(0)))) ** Apply the function twice
+    (\lambda. (
+        \lambda. (
+            L1 ((G1 **Prints** L0) + 1)
+            )
+        )
+    )
+)
