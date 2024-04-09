@@ -15,7 +15,7 @@
 %token Not And Or
 %token Equals LAngle RAngle Neq Geq Leq
 %token LParens RParens
-%token Index
+%token LIndex GIndex
 %token If Then Else
 
 /* Precedence and associativity specification */
@@ -46,7 +46,8 @@ expr:
   | LParens Lambda e = expr RParens             {Ast.Lambda(e)}
   | LParens expr RParens            {$2}
   | LParens expr expr RParens                       {Ast.Apply($2, $3)}
-  | Index n = Number                {Ast.Var(n)}
+  | LIndex n = Number                {Ast.Var(n)}
+  | GIndex n = Number                {Ast.Var(-n)}
   | aexpr                           {Ast.Aexp($1)}
   | bexpr                           {Ast.Bexp($1)}
   | LParens If expr Then expr Else expr RParens     {Ast.IfThenElse($3, $5, $7)}

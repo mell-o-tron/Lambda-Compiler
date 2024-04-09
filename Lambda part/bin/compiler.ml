@@ -18,10 +18,14 @@ let fresh_jmp () =
 
 let rec compile (e: exp) = (match e with
   | Lambda e1   ->  (
-    let c = compile(e1) in let funname = fresh_name() in ("push_operand "^funname^"\n", funname ^":\n"^ (fst c) ^ "ret\n"^ (snd c))
+    let c = compile(e1) in let funname = fresh_name() in ("push_operand "^funname^"\n", funname ^":\n"^ (fst c) ^ "pop_env ax\nret\n\n"^ (snd c))
   )
   (* gets operand from the environment stack, and pushes it to the operand stack *)
-  | Var i -> ("push_operand [ENVIRONMENT_POINTER - " ^ string_of_int ((i + 1) * 2) ^ "]\n", "")
+  | Var i -> (
+    if i < 0
+      then ("push_operand [0x2D55 + " ^ string_of_int ((-i - 1) * 2) ^ "]\n", "")
+      else ("push_operand [ENVIRONMENT_POINTER - " ^ string_of_int ((i + 1) * 2) ^ "]\n", "")
+  )
   
   (* in order to apply e1 to e2, first compile them, then pop the operands, push the parameter to the environment stack and call the retrieved function *)
   (* add any functions created by e1 and e2 to the function zone *)
@@ -96,7 +100,6 @@ and compile_bexp (b: bexp) = (match b with
 
 
 let inchn = open_in Sys.argv.(1);;
-let outchn = open_out Sys.argv.(2);;
 
 let ast_of_channel inchn =
   let lexbuf = Sedlexing.Latin1.from_channel inchn in
@@ -108,7 +111,13 @@ let ast_of_channel inchn =
 
 let ast = ast_of_channel inchn in
 let compiled = compile ast in
-Printf.fprintf outchn "%s" ((fst compiled) ^ "\n; Functions:\n" ^ (snd compiled)) ;
+
+let outchn = open_out (Sys.argv.(2) ^ ".program") in
+Printf.fprintf outchn "%s" (fst compiled) ;
+
+let outchn = open_out (Sys.argv.(2) ^ ".functions") in
+Printf.fprintf outchn "%s" (snd compiled) ;
+
 Printf.printf "%s\n" (LambdaCompiler.Ast.show_exp ast);;
 
 close_in inchn
