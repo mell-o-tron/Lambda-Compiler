@@ -1,4 +1,4 @@
 (executable
  (public_name LambdaCompiler)
- (name main)
- (libraries LambdaCompiler))
+ (name compiler)
+ (libraries LambdaCompiler menhirLib))

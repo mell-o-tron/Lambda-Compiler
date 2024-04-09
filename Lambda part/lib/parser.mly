@@ -15,12 +15,12 @@
 %token Not And Or
 %token Equals LAngle RAngle Neq Geq Leq
 %token LParens RParens
-%token Index
+%token LIndex FIndex
 %token If Then Else
 
 /* Precedence and associativity specification */
 %left       Lambda
-%nonassoc   Number Boolean LParens Index
+%nonassoc   Number Boolean LParens LIndex FIndex
 %left       Or
 %left       And
 %left       Equals LAngle RAngle Neq Geq Leq 
@@ -60,11 +60,12 @@ operandexp:
   | a = aexpr                                   {Ast.Aexp(a)}
   | b = bexpr                                   {Ast.Bexp(b)}
   | LParens If expr Then expr Else expr RParens {Ast.IfThenElse($3, $5, $7)}
+  | LIndex n = Number                           {Ast.Var(n)}
 
 lambdaexp:
   | Lambda e = expr                             {Ast.Lambda(e)}
-  | LParens lambdaexp RParens                   {$2}
-  | Index n = Number                            {Ast.Var(n)}
+  | LParens expr RParens                   {$2}
+  | FIndex n = Number                           {Ast.Var(n)}
 
 applyexp:
   | lambdaexp expr                              {Ast.Apply($1, $2)}

@@ -1,4 +1,5 @@
-open Ast
+open LambdaCompiler.Ast
+exception Syntax_error of int * int * string
 
 let function_counter = ref 0
 
@@ -92,3 +93,22 @@ and compile_bexp (b: bexp) = (match b with
           ( fst c1 ^ fst c2 ^ "pop_operand ax\npop_operand bx\ncmp ax, bx \n" ^ op ^ " " ^ l1 ^ "\npush_operand 1\njmp " ^ l2 ^ "\n"^ l1 ^":\npush_operand 0\n" ^ l2 ^ ":\n",
             snd c1 ^ snd c2 ));;
             
+
+
+let inchn = open_in Sys.argv.(1);;
+let outchn = open_out Sys.argv.(2);;
+
+let ast_of_channel inchn =
+  let lexbuf = Sedlexing.Latin1.from_channel inchn in
+  let lexer  = Sedlexing.with_tokenizer LambdaCompiler.Lexer.token lexbuf in
+  let parser = MenhirLib.Convert.Simplified.traditional2revised LambdaCompiler.Parser.program in
+  try (parser lexer) with
+  | LambdaCompiler.Parser.Error ->
+    raise (Syntax_error ((fst (Sedlexing.lexing_positions lexbuf)).pos_lnum, (fst (Sedlexing.lexing_positions lexbuf)).pos_lnum, "Syntax error"));;
+
+let ast = ast_of_channel inchn in
+let compiled = compile ast in
+Printf.fprintf outchn "%s" ((fst compiled) ^ "\n; Functions:\n" ^ (snd compiled)) ;
+Printf.printf "%s\n" (LambdaCompiler.Ast.show_exp ast);;
+
+close_in inchn
