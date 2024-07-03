@@ -54,6 +54,13 @@
 		inc word [CURRENT_DEPTH]
 %endmacro
 
+%macro 	say_here 0
+	pusha
+	mov bx, HERE_STRING
+	call print_string
+	popa
+%endmacro
+
 	cli
 	mov ax, 0x00
 	mov ds, ax

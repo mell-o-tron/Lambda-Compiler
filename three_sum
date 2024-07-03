@@ -1,0 +1,1 @@
+@(@(@ (\lambda. \lambda. \lambda. (L2 + L1 + L0)) (3)) (6) ) (9)

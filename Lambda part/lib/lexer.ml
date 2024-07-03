@@ -6,6 +6,8 @@ let number = [%sedlex.regexp? Plus digit]
 let rec token lexbuf =
     match%sedlex lexbuf with
         | "λ." | "\\lambda."  -> (Lambda)
+        | "@"                 -> (Apply)
+        | "$"                 -> (HOApply)
         | "("                 -> (LParens)
         | ")"                 -> (RParens)
         | "+"                 -> (Plus)
@@ -19,10 +21,12 @@ let rec token lexbuf =
         | "≥"  | ">="         -> (Geq)
         | "≤"  | "<="         -> (Leq)
         | "L"                 -> (LIndex)
+        | "F"                 -> (FIndex)
         | "G"                 -> (GIndex)
         | "if"                -> (If)
         | "then"              -> (Then)
         | "else"              -> (Else)
+        | "Y"                 -> (Ycomb)
         | white_space         -> (token lexbuf)
         | number              -> (
             Number (int_of_string (Sedlexing.Latin1.lexeme lexbuf))

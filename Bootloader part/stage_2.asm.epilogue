@@ -2,10 +2,10 @@
 ; seekle here
 
 seekle:
-	mov bx, word [CURRENT_DEPTH]
-	dec bx
-	sub bx, ax
-	mov ax, bx
+	;mov bx, word [CURRENT_DEPTH]
+	;dec bx
+	;sub bx, ax
+	;mov ax, bx
 	
 	mov ebx, CURRENT_RECORD
 
@@ -39,4 +39,11 @@ seekle:
 STAGING:
 	db "Separation Confirmed.", 0x0A, 0x0D, 0x00
 
+HERE_STRING:
+	db "Here!", 0x0A, 0x0D, 0x00
+	
+END_STRING:
+	db "End.", 0x0A, 0x0D, 0x00
+
+	
 times 2048-($-$$) db 0x00

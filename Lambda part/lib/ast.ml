@@ -25,8 +25,10 @@ and bexp =
 and exp =
   | Lambda      of exp
   | Apply       of exp * exp
+  | HOApply     of exp * exp
   | IfThenElse  of exp * exp * exp
   | Aexp        of aexp
   | Bexp        of bexp
   | Var         of int
+  | HOVar       of int
   [@@deriving show]
