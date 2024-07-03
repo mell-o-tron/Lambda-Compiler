@@ -1,4 +1,5 @@
 (executable
- (public_name LambdaCompiler)
  (name compiler)
- (libraries LambdaCompiler menhirLib))
+ (public_name LambdaCompiler)
+ (libraries LambdaCompiler menhirLib)
+ (flags (:standard -g)))

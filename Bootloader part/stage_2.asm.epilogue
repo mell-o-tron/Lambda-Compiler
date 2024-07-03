@@ -1,13 +1,42 @@
+
+; seekle here
+
+seekle:
+	mov bx, word [CURRENT_DEPTH]
+	dec bx
+	sub bx, ax
+	mov ax, bx
+	
+	mov ebx, CURRENT_RECORD
+
+	loople:
+		cmp ax, 0
+		je endle
+
+		dec ax
+		mov bx, [bx + 2]        ; set the record counter to the current record's definition record (parent)
+		jmp loople
+
+	endle:
+		push_operand [bx + 4]  ; push the value of the actual parameter stored in the obtained record.
+		
+		pusha
+		mov bx, [bx + 4]
+		call print_dec
+		popa
+	ret
+
+
 %include"./utils/print_string.asm"
 %include"./utils/print_dec.asm"
 
-print_number:
-	pop_env bx
-	push_operand bx
-	call print_dec
-	ret
+;print_number:
+	;pop_env bx
+	;push_operand bx
+	;call print_dec
+	;ret
 
 STAGING:
 	db "Separation Confirmed.", 0x0A, 0x0D, 0x00
 
-times 1024-($-$$) db 0x00
+times 2048-($-$$) db 0x00

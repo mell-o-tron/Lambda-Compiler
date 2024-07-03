@@ -1,6 +1,9 @@
-;	; test print
-;	
-;	pop_operand bx
-;	call print_dec
-;	
-	jmp $
+
+; test print
+
+pop_operand bx
+call print_dec
+
+jmp $
+
+

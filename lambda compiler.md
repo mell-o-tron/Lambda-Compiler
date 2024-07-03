@@ -42,7 +42,7 @@ Compile the guard, and then perform a conditional jump based on whether its valu
 
 When compiling $Ln$, one should retrieve the parameter of the function at distance $n$ from the current record in the AR linked list. It should do so by starting at the current record, and following $n$ links up the chain. The current record should be held in a known register (or memory location).
 
-This is obtained by calling the function `seekle` after having moved the number $n$ to `ax`. One thing we should consider is that we access the values *the wrong way around*, so we need to store the current depth and subtract $n$ from it in seekle.
+This is obtained by calling the function `seekle` after having moved the number $n$ to `ax`. One thing we should consider is that we access the values *the wrong way around*, so we need to store the current depth and subtract $n$ from it in seekle. The current depth is computed at compile-time.
 
 ```
 seekle:
@@ -122,3 +122,6 @@ Where `make_record` is:
 ```
 
 
+## On the matter of recursion
+
+???? Sum shid donnott work!!

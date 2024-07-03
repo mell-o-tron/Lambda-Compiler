@@ -22,3 +22,6 @@ deps:
 .PHONY: test
 test: build
 	_build/default/test/test_Parser.exe test/lambda/y.lambda
+	
+run: build
+	./_build/default/bin/compiler.exe test0.lambda ./build/y.asm
