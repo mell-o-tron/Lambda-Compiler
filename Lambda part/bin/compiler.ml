@@ -19,7 +19,9 @@ let fresh_jmp () =
 let rec compile (e: exp) (depth:int) = (match e with
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
-                                                          funname ^":\ncall_debug_info\n"^ (fst c) ^ "mov CURRENT_RECORD, [CURRENT_RECORD]\nret\n\n"^ (snd c))
+                                                          funname ^":\ncall_debug_info\n"^ (fst c) ^ 
+                                                          "bufferize\nret\n\n"
+                                                          ^ (snd c))
   )
   
   | ExpAsFun e -> (
@@ -32,7 +34,7 @@ let rec compile (e: exp) (depth:int) = (match e with
   )
 
   | Apply (e1, e2) -> let c1 = compile(e1)(depth) in let c2 = compile(e2)(depth) in
-      ((fst c1) ^ (fst c2) ^ "make_record\ncall bx\n", (snd c1) ^ (snd c2))
+      ((fst c1) ^ (fst c2) ^ "make_record\ncall bx\ndebufferize\n", (snd c1) ^ (snd c2))
       
     (* dirty! pops the extra record off the operand stack... do we somehow need it? *)
   | HOApply (e1, e2) -> let c1 = compile(e1)(depth) in let c2 = compile(e2)(depth) in

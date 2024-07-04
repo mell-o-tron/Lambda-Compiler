@@ -25,7 +25,9 @@
 %define OPERAND_POINTER edx
 %define AR_AREA_POINTER esi
 
-%define CURRENT_DEPTH 0x500
+%define CURRENT_RECORD_BUF  0x500
+%define OPERAND_POINTER_BUF 0x502
+%define AR_AREA_POINTER_BUF  0x504
 
 %macro 	push_operand 1
 		mov edi, %1
@@ -167,6 +169,19 @@
 	popa
 %endmacro
 
+%macro bufferize 0
+	mov ax, word [CURRENT_RECORD]
+	mov [CURRENT_RECORD_BUF], ax
+	mov [OPERAND_POINTER_BUF], OPERAND_POINTER
+	mov [AR_AREA_POINTER_BUF], AR_AREA_POINTER
+%endmacro
+
+%macro debufferize 0
+	mov AR_AREA_POINTER, [AR_AREA_POINTER_BUF]
+	mov CURRENT_RECORD, [CURRENT_RECORD_BUF]
+	mov OPERAND_POINTER, [OPERAND_POINTER_BUF]
+%endmacro
+
 	cli
 	mov ax, 0x00
 	mov ds, ax
@@ -180,9 +195,6 @@
 	mov AR_AREA_POINTER, 0x2D55
 	mov OPERAND_POINTER, 0x55AA
 	mov CURRENT_RECORD, AR_AREA_POINTER
-	
-	
-	mov word [CURRENT_DEPTH], 6969		; depths are computed at compile time!!
 
 mov bx, STAGING
 call print_string
