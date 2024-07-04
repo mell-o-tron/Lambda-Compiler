@@ -30,5 +30,5 @@ and exp =
   | Aexp        of aexp
   | Bexp        of bexp
   | Var         of int
-  | HOVar       of int
+  | ExpAsFun    of exp
   [@@deriving show]

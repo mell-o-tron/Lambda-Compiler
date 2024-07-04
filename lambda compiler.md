@@ -16,6 +16,11 @@ The memory used by the compiled program is divided in three areas:
 - The operand stack
 
 ## Usage of registers
+
+USE MEMORY INSTEAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+(these interfere with `ret`.)
+
 ```
 ECX : 	CURRENT_RECORD
 EDX :	OPERAND_POINTER
@@ -42,7 +47,7 @@ Compile the guard, and then perform a conditional jump based on whether its valu
 
 When compiling $Ln$, one should retrieve the parameter of the function at distance $n$ from the current record in the AR linked list. It should do so by starting at the current record, and following $n$ links up the chain. The current record should be held in a known register (or memory location).
 
-This is obtained by calling the function `seekle` after having moved the number $n$ to `ax`. One thing we should consider is that we access the values *the wrong way around*, so we need to store the current depth and subtract $n$ from it in seekle. The current depth is computed at compile-time.
+This is obtained by calling the function `seekle` after having moved the number $n$ to `ax`. 
 
 ```
 seekle:
@@ -60,7 +65,10 @@ seekle:
 
 	endle:
 		push_operand [bx + 4]  ; push the value of the actual parameter stored in the obtained record.
-	
+		cmp [bx + 6], 0
+		je veryendle
+		push_operand [bx + 6]
+	veryendle:
 	ret
 
 ```
@@ -85,6 +93,16 @@ push_operand CURRENT_RECORD
 
 ### Compiling function application
 
+There are two sorts of functional application. Application of a function to a non-function value, and application of a function to a function. In the case of application of a function to a function, we not only wish to record the argument (the function's address), but also the environment it was defined in. Records will thus have the following form:
+
+```
+word: CALLER_RECORD
+word: DEFINITION_RECORD
+word: PARAMETER
+word: PAR_DEFINITION_RECORD		; 0 if does not apply
+``` 
+
+#### Case of function applied to non-function
 - First compile the first expression (the function), thus pushing the function pointer **and the record pointer** upon the operand stack. 
 - Then compile the actual argument, thus pushing it on the stack. 
 
@@ -106,22 +124,44 @@ call bx		; make_record puts fun pointer in bx
 Where `make_record` is:
 
 ```
-%macro 	make_record
+%macro 	make_record 0
 		pop_operand ax		; argument
 		pop_operand di		; environment (definition record)
 		pop_operand bx		; function
 		
-		add AR_AREA_POINTER, 6
+		add AR_AREA_POINTER, 8
 		
-		mov [AR_AREA_POINTER], CURRENT_RECORD		; save caller record
+		mov eax, CURRENT_RECORD
+		mov [AR_AREA_POINTER], ax					; save caller record
 		mov [AR_AREA_POINTER + 2], di				; save definition record
 		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		mov [AR_AREA_POINTER + 6], word 0			; non-function check
 		
 		mov CURRENT_RECORD, AR_AREA_POINTER
 %endmacro
 ```
 
-
-## On the matter of recursion
-
-???? Sum shid donnott work!!
+#### Case of function applied to function
+Same as above, but instead of using `make_record` use the following:
+```
+%macro 	make_HO_record 0
+		add AR_AREA_POINTER, 8
+		
+		pop_operand ax								; par_def_record
+		mov [AR_AREA_POINTER + 6], ax
+		pop_operand ax								; argument
+		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		pop_operand ax								; environment (definition record)
+		mov [AR_AREA_POINTER + 2], ax				; save definition record
+		
+		mov eax, CURRENT_RECORD
+		
+		mov [AR_AREA_POINTER], ax					; save caller record
+		pop_operand bx								; function
+		
+		mov CURRENT_RECORD, AR_AREA_POINTER
+		
+		
+		
+%endmacro
+```

@@ -20,7 +20,7 @@
 %token Apply
 %token Ycomb
 %token HOApply
-%token FIndex
+%token F
 
 /* Precedence and associativity specification */
 %nonassoc   Else
@@ -51,12 +51,12 @@ expr:
   | Apply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.Apply(e1, e2)}
   | HOApply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.HOApply(e1, e2)}
   | LIndex n = Number                               {Ast.Var(n)}
-  | FIndex n = Number                               {Ast.HOVar(n)}
   | GIndex n = Number                               {Ast.Var(-n)}
+  | F e = expr                                      {Ast.ExpAsFun(e)}
   | a = aexpr                                       {Ast.Aexp(a)}
   | b = bexpr                                       {Ast.Bexp(b)}
   | If e1 = expr Then e2 = expr Else e3 = expr      {Ast.IfThenElse(e1, e2, e3)}
-  | Ycomb                                           {(Ast.Lambda
+/*  | Ycomb                                           {(Ast.Lambda
                                                         (Ast.Apply (
                                                             (Ast.Lambda
                                                               (Ast.Apply ((Ast.Var 1),
@@ -71,7 +71,7 @@ expr:
                                                                         (Ast.Var 0))))
                                                                   )))
                                                             )))
-                                                      }
+                                                      }*/
   
 aexpr:
   | n = Number                                      {Ast.IntConst(n)}

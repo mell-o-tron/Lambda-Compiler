@@ -40,23 +40,129 @@
 %endmacro
 
 %macro 	make_record 0
-		pop_operand ax		; argument
-		pop_operand di		; environment (definition record)
-		pop_operand bx		; function
-		
-		add AR_AREA_POINTER, 6
-		
-		mov [AR_AREA_POINTER], CURRENT_RECORD		; save caller record
-		mov [AR_AREA_POINTER + 2], di				; save definition record
+
+		add AR_AREA_POINTER, 8
+		mov [AR_AREA_POINTER + 6], word 0			; non-function check
+		pop_operand ax								; argument
 		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		pop_operand ax								; environment (definition record)
+		mov [AR_AREA_POINTER + 2], ax				; save definition record
+		mov eax, CURRENT_RECORD
+		mov [AR_AREA_POINTER], ax					; save caller record
+		
+		pop_operand bx								; function
+		
 		
 		mov CURRENT_RECORD, AR_AREA_POINTER
-		inc word [CURRENT_DEPTH]
 %endmacro
+
+%macro 	make_HO_record 0
+		add AR_AREA_POINTER, 8
+		
+		pop_operand ax								; par_def_record
+		mov [AR_AREA_POINTER + 6], ax
+		pop_operand ax								; argument
+		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		pop_operand ax								; environment (definition record)
+		mov [AR_AREA_POINTER + 2], ax				; save definition record
+		
+		mov eax, CURRENT_RECORD
+		
+		mov [AR_AREA_POINTER], ax					; save caller record
+		
+		pop_operand bx								; function
+		
+		mov CURRENT_RECORD, AR_AREA_POINTER
+		
+%endmacro
+
+%macro print_cur_record 0
+	pusha
+	mov bx, REC_STRING
+	call print_string
+	popa
+	
+	pusha
+	mov bx, [CURRENT_RECORD]
+	call print_dec
+	popa
+	
+	pusha
+	mov bx, [CURRENT_RECORD + 2]
+	call print_dec
+	popa
+	
+	pusha
+	mov bx, [CURRENT_RECORD + 4]
+	call print_dec
+	popa
+	
+	pusha
+	mov bx, [CURRENT_RECORD + 6]
+	call print_dec
+	popa
+	
+	pusha
+	mov bx, NEW_LINE
+	call print_string
+	popa
+%endmacro
+
 
 %macro 	say_here 0
 	pusha
 	mov bx, HERE_STRING
+	pusha
+	call print_string
+	popa
+	popa
+%endmacro
+
+%macro print_fun_pointer 1
+	pusha
+	mov bx, fun_%1
+	call print_dec
+	popa
+%endmacro
+
+%macro nl 0
+	pusha
+	mov bx, NEW_LINE
+	call print_string
+	popa
+%endmacro
+
+%macro call_debug_info 0
+	pusha
+	mov bx, FUN_STRING
+	call print_string
+	popa
+	
+	pusha
+	mov bx, $
+	sub bx, 9
+	call print_dec
+	popa
+	
+	pusha
+	mov bx, NEW_LINE
+	call print_string
+	popa
+	
+	pusha
+	mov bx, PAR_STRING
+	call print_string
+	popa
+	
+	mov ax, 0
+	call printle
+	mov ax, 1
+	call printle
+	mov ax, 2
+	call printle
+	
+	pusha
+	mov bx, NEW_LINE
 	call print_string
 	popa
 %endmacro
@@ -84,3 +190,13 @@ call print_string
 ; push_env print_number
 
 ; GENERATED CODE WILL BE WRITTEN HERE
+
+
+print_fun_pointer 1
+print_fun_pointer 2
+print_fun_pointer 3
+print_fun_pointer 4
+print_fun_pointer 5
+print_fun_pointer 6
+print_fun_pointer 7
+nl

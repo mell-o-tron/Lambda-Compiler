@@ -38,11 +38,7 @@ print_dec:
 	call print_digit
 	
 	mov ah, 0x0E
-	mov al, 10
-	int 0x10
-	
-	mov ah, 0x0E
-	mov al, 13
+	mov al, 32
 	int 0x10
 	
 	ret

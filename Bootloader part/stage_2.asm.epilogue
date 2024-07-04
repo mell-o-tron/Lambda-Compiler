@@ -24,6 +24,30 @@ seekle:
 		mov bx, [bx + 4]
 		call print_dec
 		popa
+		
+		cmp [bx + 6], word 0
+		je veryendle
+		push_operand [bx + 6]
+	veryendle:
+	ret
+	
+	
+printle:
+	mov ebx, CURRENT_RECORD
+
+	priple:
+		cmp ax, 0
+		je prindle
+
+		dec ax
+		mov bx, [bx + 2]        ; set the record counter to the current record's definition record (parent)
+		jmp priple
+
+	prindle:
+		pusha
+		mov bx, [bx + 4]
+		call print_dec
+		popa
 	ret
 
 
@@ -45,5 +69,19 @@ HERE_STRING:
 END_STRING:
 	db "End.", 0x0A, 0x0D, 0x00
 
+FUN_STRING:
+	db "Fun: ", 0x00
 	
-times 2048-($-$$) db 0x00
+PAR_STRING:
+	db "Par: ", 0x00
+	
+REC_STRING:
+	db "Rec: ", 0x00
+
+OP_STRING:
+	db "Op: ", 0x00
+	
+NEW_LINE:
+	db 0x0A, 0x0D, 0x00
+	
+times 4096-($-$$) db 0x00

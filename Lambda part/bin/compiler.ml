@@ -19,20 +19,16 @@ let fresh_jmp () =
 let rec compile (e: exp) (depth:int) = (match e with
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
-                                                          funname ^":\n"^ (fst c) ^ "mov CURRENT_RECORD, [CURRENT_RECORD]\nret\n\n"^ (snd c))
+                                                          funname ^":\ncall_debug_info\n"^ (fst c) ^ "mov CURRENT_RECORD, [CURRENT_RECORD]\nret\n\n"^ (snd c))
   )
-
+  
+  | ExpAsFun e -> (
+    let c = (compile e depth) in ((fst c) ^ "push_operand CURRENT_RECORD\n", snd c)
+  )
   | Var i -> (
     if i < 0
       then ("pusha\nmov bx, 6969\ncall print_dec\npopa", "")
       else ("mov ax, " ^ string_of_int i ^ "\ncall seekle\n", "")
-  )
-  
-  (* dirty! treats variable as function, pushing current record. *)
-  | HOVar i -> (
-    if i < 0
-      then failwith "not implemented"
-      else ("mov ax, " ^ string_of_int i ^ "\ncall seekle\npush_operand CURRENT_RECORD\n", "")
   )
 
   | Apply (e1, e2) -> let c1 = compile(e1)(depth) in let c2 = compile(e2)(depth) in
@@ -40,7 +36,7 @@ let rec compile (e: exp) (depth:int) = (match e with
       
     (* dirty! pops the extra record off the operand stack... do we somehow need it? *)
   | HOApply (e1, e2) -> let c1 = compile(e1)(depth) in let c2 = compile(e2)(depth) in
-      ((fst c1) ^ (fst c2) ^ "pop_operand ax\nmake_record\ncall bx\n", (snd c1) ^ (snd c2))
+      ((fst c1) ^ (fst c2) ^ "make_HO_record\ncall bx\n", (snd c1) ^ (snd c2))
   
   | Aexp a -> (compile_aexp a depth)
   | Bexp b -> (compile_bexp b depth)

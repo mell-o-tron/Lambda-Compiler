@@ -21,7 +21,7 @@ let rec token lexbuf =
         | "≥"  | ">="         -> (Geq)
         | "≤"  | "<="         -> (Leq)
         | "L"                 -> (LIndex)
-        | "F"                 -> (FIndex)
+        | "F"                 -> (F)
         | "G"                 -> (GIndex)
         | "if"                -> (If)
         | "then"              -> (Then)
