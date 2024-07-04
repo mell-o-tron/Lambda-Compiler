@@ -172,14 +172,19 @@
 %macro bufferize 0
 	mov ax, word [CURRENT_RECORD]
 	mov [CURRENT_RECORD_BUF], ax
-	mov [OPERAND_POINTER_BUF], OPERAND_POINTER
-	mov [AR_AREA_POINTER_BUF], AR_AREA_POINTER
+	mov eax, OPERAND_POINTER
+	mov [OPERAND_POINTER_BUF], ax
+	mov eax, AR_AREA_POINTER
+	mov [AR_AREA_POINTER_BUF], ax
 %endmacro
 
 %macro debufferize 0
-	mov AR_AREA_POINTER, [AR_AREA_POINTER_BUF]
-	mov CURRENT_RECORD, [CURRENT_RECORD_BUF]
-	mov OPERAND_POINTER, [OPERAND_POINTER_BUF]
+	mov ax, [AR_AREA_POINTER_BUF]
+	mov AR_AREA_POINTER, eax
+	mov ax, [CURRENT_RECORD_BUF]
+	mov CURRENT_RECORD, eax
+	mov ax, [OPERAND_POINTER_BUF]
+	mov OPERAND_POINTER, eax
 %endmacro
 
 	cli
@@ -204,11 +209,11 @@ call print_string
 ; GENERATED CODE WILL BE WRITTEN HERE
 
 
-print_fun_pointer 1
-print_fun_pointer 2
-print_fun_pointer 3
-print_fun_pointer 4
-print_fun_pointer 5
-print_fun_pointer 6
-print_fun_pointer 7
+;print_fun_pointer 1
+;print_fun_pointer 2
+;print_fun_pointer 3
+;print_fun_pointer 4
+;print_fun_pointer 5
+;print_fun_pointer 6
+;print_fun_pointer 7
 nl
