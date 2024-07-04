@@ -216,4 +216,4 @@ call print_string
 ;print_fun_pointer 5
 ;print_fun_pointer 6
 ;print_fun_pointer 7
-nl
+;nl

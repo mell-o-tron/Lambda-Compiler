@@ -1,1 +1,1 @@
-\lambda. $ (\lambda. @ (F1) (\lambda. @ (@(F1)(L1))(L0))) (\lambda. @ (F1) (\lambda. @ (@(F1)(L1))(L0)))
+(\lambda. $ (\lambda. $ (L1) (\lambda. @ ($(L1)(L1))(L0))) (\lambda. $ (L1) (\lambda. @ ($(L1)(L1))(L0))))

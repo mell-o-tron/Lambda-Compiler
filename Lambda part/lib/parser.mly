@@ -56,22 +56,22 @@ expr:
   | a = aexpr                                       {Ast.Aexp(a)}
   | b = bexpr                                       {Ast.Bexp(b)}
   | If e1 = expr Then e2 = expr Else e3 = expr      {Ast.IfThenElse(e1, e2, e3)}
-/*  | Ycomb                                           {(Ast.Lambda
-                                                        (Ast.Apply (
+  | Ycomb                                           {(Ast.Lambda
+                                                        (Ast.HOApply (
                                                             (Ast.Lambda
-                                                              (Ast.Apply ((Ast.Var 1),
+                                                              (Ast.HOApply ((Ast.Var 1),
                                                                   (Ast.Lambda
-                                                                    (Ast.Apply ((Ast.Apply ((Ast.Var 1), (Ast.Var 1))),
+                                                                    (Ast.Apply ((Ast.HOApply ((Ast.Var 1), (Ast.Var 1))),
                                                                         (Ast.Var 0))))
                                                                   ))),
                                                             (Ast.Lambda
-                                                              (Ast.Apply ((Ast.Var 1),
+                                                              (Ast.HOApply ((Ast.Var 1),
                                                                   (Ast.Lambda
-                                                                    (Ast.Apply ((Ast.Apply ((Ast.Var 1), (Ast.Var 1))),
+                                                                    (Ast.Apply ((Ast.HOApply ((Ast.Var 1), (Ast.Var 1))),
                                                                         (Ast.Var 0))))
                                                                   )))
                                                             )))
-                                                      }*/
+                                                      }
   
 aexpr:
   | n = Number                                      {Ast.IntConst(n)}

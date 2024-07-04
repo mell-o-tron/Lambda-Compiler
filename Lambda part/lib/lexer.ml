@@ -20,6 +20,8 @@ let rec token lexbuf =
         | "≠"  | "!="         -> (Neq)
         | "≥"  | ">="         -> (Geq)
         | "≤"  | "<="         -> (Leq)
+        | "<"                 -> (LAngle)
+        | ">"                 -> (RAngle)
         | "L"                 -> (LIndex)
         | "F"                 -> (F)
         | "G"                 -> (GIndex)

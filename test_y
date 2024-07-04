@@ -1,1 +1,1 @@
-@ ($ (\lambda. $ (\lambda. $ (L1) (\lambda. @ ($(L1)(L1))(L0))) (\lambda. $ (L1) (\lambda. @ ($(L1)(L1))(L0)))) (\lambda. \lambda. (if L0 = 1 then 0 else ((@ (L1) (L0 + (-1))) + L0)))) (2)
+@ ($ (Y) (\lambda. \lambda. (if L0 = 1 then 0 else ((@ (L1) (L0 + (-1))) + L0)))) (10)
