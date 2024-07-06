@@ -30,5 +30,5 @@ and exp =
   | Aexp        of aexp
   | Bexp        of bexp
   | Var         of int
-  | ExpAsFun    of exp
+  | Interrupt   of int * exp * exp * exp * exp * exp * exp * exp * exp * exp  (* 1 for number of interrupt, 8 for registers, final is callback *)
   [@@deriving show]

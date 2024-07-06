@@ -1,7 +1,6 @@
 
 ; test print
 
-say_here
 pop_operand bx
 call print_dec
 

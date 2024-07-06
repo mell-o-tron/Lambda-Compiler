@@ -22,19 +22,19 @@
 
 
 %define CURRENT_RECORD ecx
-%define OPERAND_POINTER edx
-%define AR_AREA_POINTER esi
+%define OPERAND_POINTER esi
+%define AR_AREA_POINTER edx
 
 %define CURRENT_RECORD_BUF  0x500
 %define OPERAND_POINTER_BUF 0x502
-%define AR_AREA_POINTER_BUF  0x504
+%define AR_AREA_POINTER_BUF 0x504
+%define INT_RESULT			0x506
 
 %macro 	push_operand 1
 		mov edi, %1
 		mov [OPERAND_POINTER], edi
 		add OPERAND_POINTER, 2
 %endmacro
-
 
 %macro 	pop_operand 1
 		sub OPERAND_POINTER, 2
@@ -185,6 +185,73 @@
 	mov CURRENT_RECORD, eax
 	mov ax, [OPERAND_POINTER_BUF]
 	mov OPERAND_POINTER, eax
+%endmacro
+
+%macro call_interrupt 1
+pop_operand al
+pop_operand ah
+pop_operand bl
+pop_operand bh
+pop_operand cl
+pop_operand ch
+pop_operand dl
+pop_operand dh
+
+int %1
+
+mov [INT_RESULT], al
+mov [INT_RESULT + 2], ah
+mov [INT_RESULT + 4], bl
+mov [INT_RESULT + 6], bh
+mov [INT_RESULT + 8], cl
+mov [INT_RESULT + 10], ch
+mov [INT_RESULT + 12], dl
+mov [INT_RESULT + 14], dh
+%endmacro
+
+
+%macro call_callback 0
+xor eax, eax
+mov ax, [INT_RESULT]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 2]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 4]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 6]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 8]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 10]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 12]
+push_operand eax
+make_record
+call bx
+debufferize
+mov ax, [INT_RESULT + 14]
+push_operand eax
+make_record
+call bx
+debufferize
 %endmacro
 
 	cli

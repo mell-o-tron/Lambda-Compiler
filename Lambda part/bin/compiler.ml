@@ -19,14 +19,11 @@ let fresh_jmp () =
 let rec compile (e: exp) (depth:int) = (match e with
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
-                                                          funname ^":\ncall_debug_info\n"^ (fst c) ^ 
+                                                          funname ^":\n"^ (fst c) ^ 
                                                           "bufferize\nret\n\n"
                                                           ^ (snd c))
   )
-  
-  | ExpAsFun e -> (
-    let c = (compile e depth) in ((fst c) ^ "push_operand CURRENT_RECORD\n", snd c)
-  )
+
   | Var i -> (
     if i < 0
       then ("pusha\nmov bx, 6969\ncall print_dec\npopa", "")
@@ -49,7 +46,22 @@ let rec compile (e: exp) (depth:int) = (match e with
           let l1 = fresh_jmp() ^ "_else" in
           let l2 = fresh_jmp() ^ "_endif" in
           ( fst c1 ^ "pop_operand ax\ncmp ax, 1 \njne " ^ l1 ^ "\n; then:\n" ^ (fst c2) ^ "\njmp " ^ l2 ^ "\n"^ l1 ^":\n; else:\n" ^ (fst c3) ^ "\n" ^ l2 ^ ":\n",
-            snd c1 ^ snd c2 ^ snd c3 ))
+            snd c1 ^ snd c2 ^ snd c3 )
+  | Interrupt (n, e1, e2, e3, e4, e5, e6, e7, e8, callback) -> 
+          let c1 = compile e1 (depth) in
+          let c2 = compile e2 (depth) in
+          let c3 = compile e3 (depth) in
+          let c4 = compile e4 (depth) in
+          let c5 = compile e5 (depth) in
+          let c6 = compile e6 (depth) in
+          let c7 = compile e7 (depth) in
+          let c8 = compile e8 (depth) in
+          let cb = compile callback (depth) in
+          ("pusha\n" ^ fst c8 ^ fst c7 ^ fst c6 ^ fst c5 ^ fst c4 ^ fst c3 ^ fst c2 ^ fst c1 ^ 
+          "call_interrupt "^ (string_of_int n) ^"\npopa\n"^fst cb ^ "call_callback\n", 
+          snd c1 ^ snd c2 ^ snd c3 ^ snd c4 ^ snd c5 ^ snd c6 ^ snd c7 ^ snd c8 ^ snd cb)
+  
+  )
 
 
 and compile_aexp (a: aexp) (depth : int) =  (match a with

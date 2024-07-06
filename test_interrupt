@@ -1,0 +1,12 @@
+INT (16, 66, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.
+(INT (16, 65, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.
+(INT (16, 78, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.(
+INT (16, 65, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.(
+INT (16, 78, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.(
+INT (16, 65, 14, 0,0,0,0,0,0, 
+\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.\lambda.(0))))))))))))

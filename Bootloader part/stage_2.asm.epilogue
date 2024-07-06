@@ -20,10 +20,10 @@ seekle:
 	endle:
 		push_operand [bx + 4]  ; push the value of the actual parameter stored in the obtained record.
 		
-		pusha
-		mov bx, [bx + 4]
-		call print_dec
-		popa
+		;pusha
+		;mov bx, [bx + 4]
+		;call print_dec
+		;popa
 		
 		cmp [bx + 6], word 0
 		je veryendle
@@ -84,4 +84,4 @@ OP_STRING:
 NEW_LINE:
 	db 0x0A, 0x0D, 0x00
 	
-times 4096-($-$$) db 0x00
+times 16384-($-$$) db 0x00
