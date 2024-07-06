@@ -67,13 +67,15 @@ let rec compile (e: exp) (depth:int) = (match e with
 and compile_aexp (a: aexp) (depth : int) =  (match a with
   | ABinop (o, e1, e2) ->
           let op = (match o with 
-            | Plus -> "add" 
-            | _ -> failwith("abop not yet implemented")
+            | Plus -> "add_integers" 
+            | Times -> "mul_integers" 
+            | Div -> "div_integers" 
+(*             | _ -> failwith("abop not yet implemented") *)
           ) in
           let c1 = compile e1 (depth) in
           let c2 = compile e2 (depth) in
           ( fst c1 ^ fst c2 ^ "pop_operand bx\npop_operand ax\n" ^ op
-            ^ " ax, bx\npush_operand eax\n",
+            ^ "\n",
             snd c1 ^ snd c2 )
   | AUnop (o, e1) ->
           let op = (match o with 
@@ -106,9 +108,13 @@ and compile_bexp (b: bexp) (depth : int) = (match b with
           
       | Compare (o, e1, e2) -> 
           let op = (match o with 
-            | Equals -> "jne" 
-            | LessThan -> "jge"
-            | _ -> failwith("comparator not yet implemented")
+            | Equals        -> "jne" 
+            | LessThan      -> "jge"
+            | GreaterThan   -> "jle"
+            | LessEqual     -> "jg"
+            | GreaterEqual  -> "jl"
+            | NotEqual      -> "je"
+(*             | _ -> failwith("comparator not yet implemented") *)
           ) in
           let c1 = compile e1 (depth) in
           let c2 = compile e2 (depth) in

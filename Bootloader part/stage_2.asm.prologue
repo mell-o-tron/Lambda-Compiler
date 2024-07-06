@@ -41,6 +41,29 @@
 		mov %1, [OPERAND_POINTER]
 %endmacro
 
+%macro add_integers 0
+add ax, bx
+push_operand eax
+%endmacro
+
+%macro mul_integers 0
+mul bx
+push_operand eax
+%endmacro
+
+%macro div_integers 0
+
+push edx
+push ecx
+mov edx, 0
+mov cx, bx
+div cx
+pop ecx
+pop edx
+
+push_operand eax
+%endmacro
+
 %macro 	make_record 0
 
 		add AR_AREA_POINTER, 8

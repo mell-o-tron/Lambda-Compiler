@@ -1,6 +1,6 @@
 type aunop = Neg
 [@@deriving show]
-type abinop = Plus | Minus | Times
+type abinop = Plus | Times | Div
 [@@deriving show]
 
 type bunop = Not

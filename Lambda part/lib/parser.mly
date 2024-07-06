@@ -9,8 +9,9 @@
 /* Tokens declarations */
 %token EOF
 %token Lambda
+%token Lambdas
 %token <int> Number
-%token Plus Minus Times
+%token Plus Minus Times Div
 %token <bool> Boolean
 %token Not And Or
 %token Equals LAngle RAngle Neq Geq Leq
@@ -28,8 +29,10 @@
 %left       And Or
 %left       Equals LAngle RAngle Leq Neq Geq
 %right      Not Minus
-%left       Plus Times
-%right      Lambda
+%left       Plus
+%left       Times
+%left       Div
+%right      Lambda Lambdas
 
 /* Starting symbol */
 
@@ -48,6 +51,7 @@ program:
 
 expr:
   | Lambda e = expr                                 {Ast.Lambda(e)}
+  | Lambdas e = expr                                {Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(e))))))))}
   | LParens e = expr RParens                        {e}
   | Apply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.Apply(e1, e2)}
   | HOApply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.HOApply(e1, e2)}
@@ -94,8 +98,8 @@ aexpr:
 
 %inline abinop:
   | Plus                                            {Ast.Plus}
-  | Minus                                           {Ast.Minus}
   | Times                                           {Ast.Times}
+  | Div                                             {Ast.Div}
 
 bexpr:
   | b = Boolean                                     {Ast.BoolConst(b)}
