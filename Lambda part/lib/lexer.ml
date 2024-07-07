@@ -2,6 +2,7 @@ open Parser
 
 let digit = [%sedlex.regexp? '0' .. '9']
 let number = [%sedlex.regexp? Plus digit]
+let character = [%sedlex.regexp? 0x20 .. 0x7E]
 
 let rec token lexbuf =
     match%sedlex lexbuf with
@@ -31,11 +32,13 @@ let rec token lexbuf =
         | "else"              -> (Else)
         | "Y"                 -> (Ycomb)
         | "INT"               -> (Interrupt)
+        | "'"                 -> (Quot)
         | white_space         -> (token lexbuf)
         | ","                 -> (Comma)
         | number              -> (
             Number (int_of_string (Sedlexing.Latin1.lexeme lexbuf))
         )
+        | character           -> Character (Sedlexing.Latin1.lexeme lexbuf).[0]
         | "**"                -> (comment lexbuf)
         | eof                 -> (EOF)
         | any                 -> (

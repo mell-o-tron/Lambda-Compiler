@@ -2,7 +2,7 @@
 
 if [ -z "$1" ]
 then
-    echo "Please pass a filename"
+    echo "Postprocessor says: Please pass a filename"
     exit 1
 fi
 
@@ -20,5 +20,5 @@ then
     exit 1
 fi
 
-cd "../Bootloader part"
+cd "../Asm part"
 make

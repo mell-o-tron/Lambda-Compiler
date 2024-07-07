@@ -11,6 +11,7 @@
 %token Lambda
 %token Lambdas
 %token <int> Number
+%token <char> Character
 %token Plus Minus Times Div
 %token <bool> Boolean
 %token Not And Or
@@ -23,6 +24,7 @@
 %token HOApply
 %token Interrupt
 %token Comma
+%token Quot
 
 /* Precedence and associativity specification */
 %nonassoc   Else
@@ -90,6 +92,7 @@ expr:
   
 aexpr:
   | n = Number                                      {Ast.IntConst(n)}
+  | Quot c = Character Quot                         {Ast.IntConst(Char.code c)}
   | e1 = expr op = abinop e2 = expr                 {Ast.ABinop(op, e1, e2)}
   | op = aunop e = expr                             {Ast.AUnop(op, e)}
 

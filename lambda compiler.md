@@ -2,9 +2,9 @@
 The lambda compiler, whose official name is yet undecided, compiles a version of the $\lambda$-calculus to 16 bit NASM x86 assembly code, to be ran in Real Mode. The language provides ways to activate BIOS interrupts.
 
 ## Language
-The language of the source files is the standard lambda calculus with De Bruijn indices extended with integers, booleans and conditionals:
+The language of the source files is the standard lambda calculus with De Bruijn indices extended with integers, booleans, conditionals, and *interrupts*:
 
-$$e ::= \lambda e \mid ee \mid Ln \mid \text{if }e\text{ then } e \text{ else } e \mid n \in \mathbb Z \mid b \in \mathbb B \mid e \oplus_{A || B} e \mid \ominus_{A || B} \,\,e$$
+$$e ::= \lambda e \mid ee \mid Ln \mid \text{if }e\text{ then } e \text{ else } e \mid n \in \mathbb Z \mid b \in \mathbb B \mid e \oplus_{A || B} e \mid \ominus_{A || B} \,\,e | \;\text{INT}(n, regs, cont)$$
 Where $\oplus_A$, $\oplus_B$, $\ominus_A$, $\ominus_B$ are binary and unary, arithmetic and boolean operations resp. $Ln$ is the $n$-th DB index.
 
 ## Data Structures
@@ -15,9 +15,9 @@ The memory used by the compiled program is divided in three areas:
 - The activation record (AR) linked list
 - The operand stack
 
-## Usage of registers
+Additionally, some space is reserved for the result of interrupts.
 
-USE MEMORY INSTEAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+## Usage of registers
 
 (these interfere with `ret`.)
 
