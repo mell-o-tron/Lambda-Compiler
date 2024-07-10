@@ -4,14 +4,14 @@
 
 %{
      (* Auxiliary definitions *)
-     let rec unroll_list lst n = (match lst with
+    (* let rec unroll_list lst n = (match lst with
         | a :: lst1 -> Ast.IfThenElse(
                           Ast.Bexp(
                           Ast.Compare(Ast.Equals, Ast.Var(0), Ast.Aexp(Ast.IntConst(n)))),
                           a,
                           unroll_list lst1 (n+1))
         | []        -> Ast.Die
-     )
+     )*)
 %}
 
 /* Tokens declarations */
@@ -87,7 +87,7 @@ expr:
                                                                   )))
                                                             )))
                                                       }
-  | LParens s = subtuple RParens                    {Ast.Lambda (unroll_list s 0)}
+  | LParens s = subtuple RParens                    {Ast.Lambda (Ast.Switch(s, 0))}
   | LParens RParens                                 {Ast.Lambda (Ast.Die)}
   
 subtuple:

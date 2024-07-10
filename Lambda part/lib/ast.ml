@@ -31,5 +31,6 @@ and exp =
   | Bexp        of bexp
   | Var         of int
   | Interrupt   of exp  (* function representing tuple: 1 for number of interrupt, 8 for registers, final is callback *)
+  | Switch      of exp list * int
   | Die
   [@@deriving show]

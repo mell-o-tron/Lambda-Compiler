@@ -68,11 +68,28 @@ let rec compile (e: exp) (depth:int) = (match e with
           "call_interrupt " ^ l1 ^ "\npopa\n" ^ cb ^ "call_callback\n",
           snd ct)
 
-  | Die -> ("jmp death", "")
+  | Switch (lst, n) -> let (c, l) = compile_switch_params lst in ("mov ax, " ^ (string_of_int n) ^ "\ncall seekle\npop_operand ax\n" ^ compile_switch_jmps (l) (0) ^ fst c
+    , snd c
+  )
+          
+  | Die -> ("jmp death\n", "")
   
   )
 
 
+and compile_switch_params (lst : exp list) = (match lst with
+  | []            ->  (("",""), [])
+  | e :: lst1     ->  let c1 = compile_switch_params (lst1) in
+                      let l1 = fresh_jmp() ^ "_switch" in 
+                      let c  = compile e 0 in ((l1 ^ ":\n" ^ fst c ^ "bufferize\nret\n" ^ fst (fst c1), snd c ^ snd (fst c1)), l1 :: snd c1)
+)
+  
+and compile_switch_jmps (lst : string list) (n : int) = (match lst with
+  | []            -> fst(compile (Die) (0))
+  | e :: lst1      -> "cmp ax, " ^ (string_of_int n) ^ "\nje " ^ e ^ "\n" ^ (compile_switch_jmps lst1 (n+1))
+
+)
+  
 and compile_aexp (a: aexp) (depth : int) =  (match a with
   | ABinop (o, e1, e2) ->
           let op = (match o with 
