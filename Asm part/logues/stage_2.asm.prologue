@@ -212,11 +212,11 @@ push_operand eax
 	mov OPERAND_POINTER, eax
 %endmacro
 
-%macro call_interrupt 0
+%macro call_interrupt 1
 pop_operand ax
 shl ax, 8
 or ax, 0xcd
-mov [should_print_here], ax
+mov [should_call_here_%1], ax
 
 pop_operand al
 pop_operand ah
@@ -227,7 +227,7 @@ pop_operand ch
 pop_operand dl
 pop_operand dh
 
-should_print_here:
+should_call_here_%1:
 dw 0
 
 mov [INT_RESULT], al
@@ -243,7 +243,7 @@ mov [INT_RESULT + 14], dh
 
 %macro call_callback 0
 call template_create_tuple
-
+push_operand CURRENT_RECORD
 make_HO_record
 
 call bx

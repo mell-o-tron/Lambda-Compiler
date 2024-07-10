@@ -212,11 +212,11 @@ push_operand eax
 	mov OPERAND_POINTER, eax
 %endmacro
 
-%macro call_interrupt 0
+%macro call_interrupt 1
 pop_operand ax
 shl ax, 8
 or ax, 0xcd
-mov [should_print_here], ax
+mov [should_call_here_%1], ax
 
 pop_operand al
 pop_operand ah
@@ -227,7 +227,7 @@ pop_operand ch
 pop_operand dl
 pop_operand dh
 
-should_print_here:
+should_call_here_%1:
 dw 0
 
 mov [INT_RESULT], al
@@ -243,7 +243,7 @@ mov [INT_RESULT + 14], dh
 
 %macro call_callback 0
 call template_create_tuple
-
+push_operand CURRENT_RECORD
 make_HO_record
 
 call bx
@@ -274,63 +274,63 @@ call print_string
 
 ; GENERATED CODE WILL BE WRITTEN HERE
 pusha
-push_operand fun_18
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 8
 make_record
 call bx
 debufferize
-push_operand fun_16
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 7
 make_record
 call bx
 debufferize
-push_operand fun_14
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 6
 make_record
 call bx
 debufferize
-push_operand fun_12
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 5
 make_record
 call bx
 debufferize
-push_operand fun_10
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 4
 make_record
 call bx
 debufferize
-push_operand fun_8
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 3
 make_record
 call bx
 debufferize
-push_operand fun_6
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 2
 make_record
 call bx
 debufferize
-push_operand fun_4
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 1
 make_record
 call bx
 debufferize
-push_operand fun_2
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 0
 make_record
 call bx
 debufferize
-call_interrupt
+call_interrupt branch_1_else
 popa
-push_operand fun_20
+push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 9
 make_record
@@ -356,27 +356,27 @@ mov bx, DEAD_STRING
 call print_string
 
 jmp $
-fun_2:
+fun_1_tuple:
 mov ax, 0
 call seekle
 ;optimized
 mov bx, 0
 pop_operand ax
 cmp ax, bx 
-jne branch_1_cmp_fail
+jne branch_2_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_2_end_cmp
-branch_1_cmp_fail:
+jmp branch_3_end_cmp
+branch_2_cmp_fail:
 push_operand 0 ; cmp false
-branch_2_end_cmp:
+branch_3_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_39_else
+jne branch_327_else
 ; then:
 push_operand 16
 
-jmp branch_40_endif
-branch_39_else:
+jmp branch_328_endif
+branch_327_else:
 ; else:
 mov ax, 0
 call seekle
@@ -384,20 +384,20 @@ call seekle
 mov bx, 1
 pop_operand ax
 cmp ax, bx 
-jne branch_3_cmp_fail
+jne branch_4_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_4_end_cmp
-branch_3_cmp_fail:
+jmp branch_5_end_cmp
+branch_4_cmp_fail:
 push_operand 0 ; cmp false
-branch_4_end_cmp:
+branch_5_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_37_else
+jne branch_325_else
 ; then:
 push_operand 66
 
-jmp branch_38_endif
-branch_37_else:
+jmp branch_326_endif
+branch_325_else:
 ; else:
 mov ax, 0
 call seekle
@@ -405,20 +405,20 @@ call seekle
 mov bx, 2
 pop_operand ax
 cmp ax, bx 
-jne branch_5_cmp_fail
+jne branch_6_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_6_end_cmp
-branch_5_cmp_fail:
+jmp branch_7_end_cmp
+branch_6_cmp_fail:
 push_operand 0 ; cmp false
-branch_6_end_cmp:
+branch_7_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_35_else
+jne branch_323_else
 ; then:
 push_operand 14
 
-jmp branch_36_endif
-branch_35_else:
+jmp branch_324_endif
+branch_323_else:
 ; else:
 mov ax, 0
 call seekle
@@ -426,20 +426,20 @@ call seekle
 mov bx, 3
 pop_operand ax
 cmp ax, bx 
-jne branch_7_cmp_fail
+jne branch_8_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_8_end_cmp
-branch_7_cmp_fail:
+jmp branch_9_end_cmp
+branch_8_cmp_fail:
 push_operand 0 ; cmp false
-branch_8_end_cmp:
+branch_9_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_33_else
+jne branch_321_else
 ; then:
 push_operand 0
 
-jmp branch_34_endif
-branch_33_else:
+jmp branch_322_endif
+branch_321_else:
 ; else:
 mov ax, 0
 call seekle
@@ -447,1613 +447,17 @@ call seekle
 mov bx, 4
 pop_operand ax
 cmp ax, bx 
-jne branch_9_cmp_fail
+jne branch_10_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_10_end_cmp
-branch_9_cmp_fail:
+jmp branch_11_end_cmp
+branch_10_cmp_fail:
 push_operand 0 ; cmp false
-branch_10_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_31_else
-; then:
-push_operand 0
-
-jmp branch_32_endif
-branch_31_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_11_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_12_end_cmp
-branch_11_cmp_fail:
-push_operand 0 ; cmp false
-branch_12_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_29_else
-; then:
-push_operand 0
-
-jmp branch_30_endif
-branch_29_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_13_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_14_end_cmp
-branch_13_cmp_fail:
-push_operand 0 ; cmp false
-branch_14_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_27_else
-; then:
-push_operand 0
-
-jmp branch_28_endif
-branch_27_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_15_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_16_end_cmp
-branch_15_cmp_fail:
-push_operand 0 ; cmp false
-branch_16_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_25_else
-; then:
-push_operand 0
-
-jmp branch_26_endif
-branch_25_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_17_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_18_end_cmp
-branch_17_cmp_fail:
-push_operand 0 ; cmp false
-branch_18_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_23_else
-; then:
-push_operand 0
-
-jmp branch_24_endif
-branch_23_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_19_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_20_end_cmp
-branch_19_cmp_fail:
-push_operand 0 ; cmp false
-branch_20_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_21_else
-; then:
-push_operand fun_1
-push_operand CURRENT_RECORD
-
-jmp branch_22_endif
-branch_21_else:
-; else:
-jmp death
-branch_22_endif:
-
-branch_24_endif:
-
-branch_26_endif:
-
-branch_28_endif:
-
-branch_30_endif:
-
-branch_32_endif:
-
-branch_34_endif:
-
-branch_36_endif:
-
-branch_38_endif:
-
-branch_40_endif:
-bufferize
-ret
-
-fun_1:
-push_operand 0
-bufferize
-ret
-
-fun_4:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_41_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_42_end_cmp
-branch_41_cmp_fail:
-push_operand 0 ; cmp false
-branch_42_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_79_else
-; then:
-push_operand 16
-
-jmp branch_80_endif
-branch_79_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_43_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_44_end_cmp
-branch_43_cmp_fail:
-push_operand 0 ; cmp false
-branch_44_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_77_else
-; then:
-push_operand 66
-
-jmp branch_78_endif
-branch_77_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_45_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_46_end_cmp
-branch_45_cmp_fail:
-push_operand 0 ; cmp false
-branch_46_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_75_else
-; then:
-push_operand 14
-
-jmp branch_76_endif
-branch_75_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_47_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_48_end_cmp
-branch_47_cmp_fail:
-push_operand 0 ; cmp false
-branch_48_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_73_else
-; then:
-push_operand 0
-
-jmp branch_74_endif
-branch_73_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_49_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_50_end_cmp
-branch_49_cmp_fail:
-push_operand 0 ; cmp false
-branch_50_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_71_else
-; then:
-push_operand 0
-
-jmp branch_72_endif
-branch_71_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_51_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_52_end_cmp
-branch_51_cmp_fail:
-push_operand 0 ; cmp false
-branch_52_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_69_else
-; then:
-push_operand 0
-
-jmp branch_70_endif
-branch_69_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_53_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_54_end_cmp
-branch_53_cmp_fail:
-push_operand 0 ; cmp false
-branch_54_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_67_else
-; then:
-push_operand 0
-
-jmp branch_68_endif
-branch_67_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_55_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_56_end_cmp
-branch_55_cmp_fail:
-push_operand 0 ; cmp false
-branch_56_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_65_else
-; then:
-push_operand 0
-
-jmp branch_66_endif
-branch_65_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_57_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_58_end_cmp
-branch_57_cmp_fail:
-push_operand 0 ; cmp false
-branch_58_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_63_else
-; then:
-push_operand 0
-
-jmp branch_64_endif
-branch_63_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_59_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_60_end_cmp
-branch_59_cmp_fail:
-push_operand 0 ; cmp false
-branch_60_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_61_else
-; then:
-push_operand fun_3
-push_operand CURRENT_RECORD
-
-jmp branch_62_endif
-branch_61_else:
-; else:
-jmp death
-branch_62_endif:
-
-branch_64_endif:
-
-branch_66_endif:
-
-branch_68_endif:
-
-branch_70_endif:
-
-branch_72_endif:
-
-branch_74_endif:
-
-branch_76_endif:
-
-branch_78_endif:
-
-branch_80_endif:
-bufferize
-ret
-
-fun_3:
-push_operand 0
-bufferize
-ret
-
-fun_6:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_81_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_82_end_cmp
-branch_81_cmp_fail:
-push_operand 0 ; cmp false
-branch_82_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_119_else
-; then:
-push_operand 16
-
-jmp branch_120_endif
-branch_119_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_83_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_84_end_cmp
-branch_83_cmp_fail:
-push_operand 0 ; cmp false
-branch_84_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_117_else
-; then:
-push_operand 66
-
-jmp branch_118_endif
-branch_117_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_85_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_86_end_cmp
-branch_85_cmp_fail:
-push_operand 0 ; cmp false
-branch_86_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_115_else
-; then:
-push_operand 14
-
-jmp branch_116_endif
-branch_115_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_87_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_88_end_cmp
-branch_87_cmp_fail:
-push_operand 0 ; cmp false
-branch_88_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_113_else
-; then:
-push_operand 0
-
-jmp branch_114_endif
-branch_113_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_89_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_90_end_cmp
-branch_89_cmp_fail:
-push_operand 0 ; cmp false
-branch_90_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_111_else
-; then:
-push_operand 0
-
-jmp branch_112_endif
-branch_111_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_91_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_92_end_cmp
-branch_91_cmp_fail:
-push_operand 0 ; cmp false
-branch_92_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_109_else
-; then:
-push_operand 0
-
-jmp branch_110_endif
-branch_109_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_93_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_94_end_cmp
-branch_93_cmp_fail:
-push_operand 0 ; cmp false
-branch_94_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_107_else
-; then:
-push_operand 0
-
-jmp branch_108_endif
-branch_107_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_95_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_96_end_cmp
-branch_95_cmp_fail:
-push_operand 0 ; cmp false
-branch_96_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_105_else
-; then:
-push_operand 0
-
-jmp branch_106_endif
-branch_105_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_97_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_98_end_cmp
-branch_97_cmp_fail:
-push_operand 0 ; cmp false
-branch_98_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_103_else
-; then:
-push_operand 0
-
-jmp branch_104_endif
-branch_103_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_99_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_100_end_cmp
-branch_99_cmp_fail:
-push_operand 0 ; cmp false
-branch_100_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_101_else
-; then:
-push_operand fun_5
-push_operand CURRENT_RECORD
-
-jmp branch_102_endif
-branch_101_else:
-; else:
-jmp death
-branch_102_endif:
-
-branch_104_endif:
-
-branch_106_endif:
-
-branch_108_endif:
-
-branch_110_endif:
-
-branch_112_endif:
-
-branch_114_endif:
-
-branch_116_endif:
-
-branch_118_endif:
-
-branch_120_endif:
-bufferize
-ret
-
-fun_5:
-push_operand 0
-bufferize
-ret
-
-fun_8:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_121_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_122_end_cmp
-branch_121_cmp_fail:
-push_operand 0 ; cmp false
-branch_122_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_159_else
-; then:
-push_operand 16
-
-jmp branch_160_endif
-branch_159_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_123_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_124_end_cmp
-branch_123_cmp_fail:
-push_operand 0 ; cmp false
-branch_124_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_157_else
-; then:
-push_operand 66
-
-jmp branch_158_endif
-branch_157_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_125_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_126_end_cmp
-branch_125_cmp_fail:
-push_operand 0 ; cmp false
-branch_126_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_155_else
-; then:
-push_operand 14
-
-jmp branch_156_endif
-branch_155_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_127_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_128_end_cmp
-branch_127_cmp_fail:
-push_operand 0 ; cmp false
-branch_128_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_153_else
-; then:
-push_operand 0
-
-jmp branch_154_endif
-branch_153_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_129_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_130_end_cmp
-branch_129_cmp_fail:
-push_operand 0 ; cmp false
-branch_130_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_151_else
-; then:
-push_operand 0
-
-jmp branch_152_endif
-branch_151_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_131_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_132_end_cmp
-branch_131_cmp_fail:
-push_operand 0 ; cmp false
-branch_132_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_149_else
-; then:
-push_operand 0
-
-jmp branch_150_endif
-branch_149_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_133_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_134_end_cmp
-branch_133_cmp_fail:
-push_operand 0 ; cmp false
-branch_134_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_147_else
-; then:
-push_operand 0
-
-jmp branch_148_endif
-branch_147_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_135_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_136_end_cmp
-branch_135_cmp_fail:
-push_operand 0 ; cmp false
-branch_136_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_145_else
-; then:
-push_operand 0
-
-jmp branch_146_endif
-branch_145_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_137_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_138_end_cmp
-branch_137_cmp_fail:
-push_operand 0 ; cmp false
-branch_138_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_143_else
-; then:
-push_operand 0
-
-jmp branch_144_endif
-branch_143_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_139_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_140_end_cmp
-branch_139_cmp_fail:
-push_operand 0 ; cmp false
-branch_140_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_141_else
-; then:
-push_operand fun_7
-push_operand CURRENT_RECORD
-
-jmp branch_142_endif
-branch_141_else:
-; else:
-jmp death
-branch_142_endif:
-
-branch_144_endif:
-
-branch_146_endif:
-
-branch_148_endif:
-
-branch_150_endif:
-
-branch_152_endif:
-
-branch_154_endif:
-
-branch_156_endif:
-
-branch_158_endif:
-
-branch_160_endif:
-bufferize
-ret
-
-fun_7:
-push_operand 0
-bufferize
-ret
-
-fun_10:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_161_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_162_end_cmp
-branch_161_cmp_fail:
-push_operand 0 ; cmp false
-branch_162_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_199_else
-; then:
-push_operand 16
-
-jmp branch_200_endif
-branch_199_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_163_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_164_end_cmp
-branch_163_cmp_fail:
-push_operand 0 ; cmp false
-branch_164_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_197_else
-; then:
-push_operand 66
-
-jmp branch_198_endif
-branch_197_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_165_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_166_end_cmp
-branch_165_cmp_fail:
-push_operand 0 ; cmp false
-branch_166_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_195_else
-; then:
-push_operand 14
-
-jmp branch_196_endif
-branch_195_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_167_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_168_end_cmp
-branch_167_cmp_fail:
-push_operand 0 ; cmp false
-branch_168_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_193_else
-; then:
-push_operand 0
-
-jmp branch_194_endif
-branch_193_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_169_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_170_end_cmp
-branch_169_cmp_fail:
-push_operand 0 ; cmp false
-branch_170_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_191_else
-; then:
-push_operand 0
-
-jmp branch_192_endif
-branch_191_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_171_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_172_end_cmp
-branch_171_cmp_fail:
-push_operand 0 ; cmp false
-branch_172_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_189_else
-; then:
-push_operand 0
-
-jmp branch_190_endif
-branch_189_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_173_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_174_end_cmp
-branch_173_cmp_fail:
-push_operand 0 ; cmp false
-branch_174_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_187_else
-; then:
-push_operand 0
-
-jmp branch_188_endif
-branch_187_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_175_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_176_end_cmp
-branch_175_cmp_fail:
-push_operand 0 ; cmp false
-branch_176_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_185_else
-; then:
-push_operand 0
-
-jmp branch_186_endif
-branch_185_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_177_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_178_end_cmp
-branch_177_cmp_fail:
-push_operand 0 ; cmp false
-branch_178_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_183_else
-; then:
-push_operand 0
-
-jmp branch_184_endif
-branch_183_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_179_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_180_end_cmp
-branch_179_cmp_fail:
-push_operand 0 ; cmp false
-branch_180_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_181_else
-; then:
-push_operand fun_9
-push_operand CURRENT_RECORD
-
-jmp branch_182_endif
-branch_181_else:
-; else:
-jmp death
-branch_182_endif:
-
-branch_184_endif:
-
-branch_186_endif:
-
-branch_188_endif:
-
-branch_190_endif:
-
-branch_192_endif:
-
-branch_194_endif:
-
-branch_196_endif:
-
-branch_198_endif:
-
-branch_200_endif:
-bufferize
-ret
-
-fun_9:
-push_operand 0
-bufferize
-ret
-
-fun_12:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_201_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_202_end_cmp
-branch_201_cmp_fail:
-push_operand 0 ; cmp false
-branch_202_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_239_else
-; then:
-push_operand 16
-
-jmp branch_240_endif
-branch_239_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_203_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_204_end_cmp
-branch_203_cmp_fail:
-push_operand 0 ; cmp false
-branch_204_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_237_else
-; then:
-push_operand 66
-
-jmp branch_238_endif
-branch_237_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_205_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_206_end_cmp
-branch_205_cmp_fail:
-push_operand 0 ; cmp false
-branch_206_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_235_else
-; then:
-push_operand 14
-
-jmp branch_236_endif
-branch_235_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_207_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_208_end_cmp
-branch_207_cmp_fail:
-push_operand 0 ; cmp false
-branch_208_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_233_else
-; then:
-push_operand 0
-
-jmp branch_234_endif
-branch_233_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_209_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_210_end_cmp
-branch_209_cmp_fail:
-push_operand 0 ; cmp false
-branch_210_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_231_else
-; then:
-push_operand 0
-
-jmp branch_232_endif
-branch_231_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_211_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_212_end_cmp
-branch_211_cmp_fail:
-push_operand 0 ; cmp false
-branch_212_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_229_else
-; then:
-push_operand 0
-
-jmp branch_230_endif
-branch_229_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_213_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_214_end_cmp
-branch_213_cmp_fail:
-push_operand 0 ; cmp false
-branch_214_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_227_else
-; then:
-push_operand 0
-
-jmp branch_228_endif
-branch_227_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_215_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_216_end_cmp
-branch_215_cmp_fail:
-push_operand 0 ; cmp false
-branch_216_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_225_else
-; then:
-push_operand 0
-
-jmp branch_226_endif
-branch_225_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_217_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_218_end_cmp
-branch_217_cmp_fail:
-push_operand 0 ; cmp false
-branch_218_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_223_else
-; then:
-push_operand 0
-
-jmp branch_224_endif
-branch_223_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_219_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_220_end_cmp
-branch_219_cmp_fail:
-push_operand 0 ; cmp false
-branch_220_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_221_else
-; then:
-push_operand fun_11
-push_operand CURRENT_RECORD
-
-jmp branch_222_endif
-branch_221_else:
-; else:
-jmp death
-branch_222_endif:
-
-branch_224_endif:
-
-branch_226_endif:
-
-branch_228_endif:
-
-branch_230_endif:
-
-branch_232_endif:
-
-branch_234_endif:
-
-branch_236_endif:
-
-branch_238_endif:
-
-branch_240_endif:
-bufferize
-ret
-
-fun_11:
-push_operand 0
-bufferize
-ret
-
-fun_14:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_241_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_242_end_cmp
-branch_241_cmp_fail:
-push_operand 0 ; cmp false
-branch_242_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_279_else
-; then:
-push_operand 16
-
-jmp branch_280_endif
-branch_279_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 1
-pop_operand ax
-cmp ax, bx 
-jne branch_243_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_244_end_cmp
-branch_243_cmp_fail:
-push_operand 0 ; cmp false
-branch_244_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_277_else
-; then:
-push_operand 66
-
-jmp branch_278_endif
-branch_277_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 2
-pop_operand ax
-cmp ax, bx 
-jne branch_245_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_246_end_cmp
-branch_245_cmp_fail:
-push_operand 0 ; cmp false
-branch_246_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_275_else
-; then:
-push_operand 14
-
-jmp branch_276_endif
-branch_275_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 3
-pop_operand ax
-cmp ax, bx 
-jne branch_247_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_248_end_cmp
-branch_247_cmp_fail:
-push_operand 0 ; cmp false
-branch_248_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_273_else
-; then:
-push_operand 0
-
-jmp branch_274_endif
-branch_273_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 4
-pop_operand ax
-cmp ax, bx 
-jne branch_249_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_250_end_cmp
-branch_249_cmp_fail:
-push_operand 0 ; cmp false
-branch_250_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_271_else
-; then:
-push_operand 0
-
-jmp branch_272_endif
-branch_271_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 5
-pop_operand ax
-cmp ax, bx 
-jne branch_251_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_252_end_cmp
-branch_251_cmp_fail:
-push_operand 0 ; cmp false
-branch_252_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_269_else
-; then:
-push_operand 0
-
-jmp branch_270_endif
-branch_269_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_253_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_254_end_cmp
-branch_253_cmp_fail:
-push_operand 0 ; cmp false
-branch_254_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_267_else
-; then:
-push_operand 0
-
-jmp branch_268_endif
-branch_267_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_255_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_256_end_cmp
-branch_255_cmp_fail:
-push_operand 0 ; cmp false
-branch_256_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_265_else
-; then:
-push_operand 0
-
-jmp branch_266_endif
-branch_265_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_257_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_258_end_cmp
-branch_257_cmp_fail:
-push_operand 0 ; cmp false
-branch_258_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_263_else
-; then:
-push_operand 0
-
-jmp branch_264_endif
-branch_263_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_259_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_260_end_cmp
-branch_259_cmp_fail:
-push_operand 0 ; cmp false
-branch_260_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_261_else
-; then:
-push_operand fun_13
-push_operand CURRENT_RECORD
-
-jmp branch_262_endif
-branch_261_else:
-; else:
-jmp death
-branch_262_endif:
-
-branch_264_endif:
-
-branch_266_endif:
-
-branch_268_endif:
-
-branch_270_endif:
-
-branch_272_endif:
-
-branch_274_endif:
-
-branch_276_endif:
-
-branch_278_endif:
-
-branch_280_endif:
-bufferize
-ret
-
-fun_13:
-push_operand 0
-bufferize
-ret
-
-fun_16:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 0
-pop_operand ax
-cmp ax, bx 
-jne branch_281_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_282_end_cmp
-branch_281_cmp_fail:
-push_operand 0 ; cmp false
-branch_282_end_cmp:
+branch_11_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_319_else
 ; then:
-push_operand 16
+push_operand 0
 
 jmp branch_320_endif
 branch_319_else:
@@ -2061,20 +465,20 @@ branch_319_else:
 mov ax, 0
 call seekle
 ;optimized
-mov bx, 1
+mov bx, 5
 pop_operand ax
 cmp ax, bx 
-jne branch_283_cmp_fail
+jne branch_12_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_284_end_cmp
-branch_283_cmp_fail:
+jmp branch_13_end_cmp
+branch_12_cmp_fail:
 push_operand 0 ; cmp false
-branch_284_end_cmp:
+branch_13_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_317_else
 ; then:
-push_operand 66
+push_operand 0
 
 jmp branch_318_endif
 branch_317_else:
@@ -2082,20 +486,20 @@ branch_317_else:
 mov ax, 0
 call seekle
 ;optimized
-mov bx, 2
+mov bx, 6
 pop_operand ax
 cmp ax, bx 
-jne branch_285_cmp_fail
+jne branch_14_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_286_end_cmp
-branch_285_cmp_fail:
+jmp branch_15_end_cmp
+branch_14_cmp_fail:
 push_operand 0 ; cmp false
-branch_286_end_cmp:
+branch_15_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_315_else
 ; then:
-push_operand 14
+push_operand 0
 
 jmp branch_316_endif
 branch_315_else:
@@ -2103,15 +507,15 @@ branch_315_else:
 mov ax, 0
 call seekle
 ;optimized
-mov bx, 3
+mov bx, 7
 pop_operand ax
 cmp ax, bx 
-jne branch_287_cmp_fail
+jne branch_16_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_288_end_cmp
-branch_287_cmp_fail:
+jmp branch_17_end_cmp
+branch_16_cmp_fail:
 push_operand 0 ; cmp false
-branch_288_end_cmp:
+branch_17_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_313_else
@@ -2124,15 +528,15 @@ branch_313_else:
 mov ax, 0
 call seekle
 ;optimized
-mov bx, 4
+mov bx, 8
 pop_operand ax
 cmp ax, bx 
-jne branch_289_cmp_fail
+jne branch_18_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_290_end_cmp
-branch_289_cmp_fail:
+jmp branch_19_end_cmp
+branch_18_cmp_fail:
 push_operand 0 ; cmp false
-branch_290_end_cmp:
+branch_19_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_311_else
@@ -2145,118 +549,26 @@ branch_311_else:
 mov ax, 0
 call seekle
 ;optimized
-mov bx, 5
+mov bx, 9
 pop_operand ax
 cmp ax, bx 
-jne branch_291_cmp_fail
+jne branch_20_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_292_end_cmp
-branch_291_cmp_fail:
+jmp branch_21_end_cmp
+branch_20_cmp_fail:
 push_operand 0 ; cmp false
-branch_292_end_cmp:
+branch_21_end_cmp:
 pop_operand ax
 cmp ax, 1 
 jne branch_309_else
 ; then:
-push_operand 0
+push_operand fun_16
+push_operand CURRENT_RECORD
 
 jmp branch_310_endif
 branch_309_else:
 ; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 6
-pop_operand ax
-cmp ax, bx 
-jne branch_293_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_294_end_cmp
-branch_293_cmp_fail:
-push_operand 0 ; cmp false
-branch_294_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_307_else
-; then:
-push_operand 0
-
-jmp branch_308_endif
-branch_307_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 7
-pop_operand ax
-cmp ax, bx 
-jne branch_295_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_296_end_cmp
-branch_295_cmp_fail:
-push_operand 0 ; cmp false
-branch_296_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_305_else
-; then:
-push_operand 0
-
-jmp branch_306_endif
-branch_305_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 8
-pop_operand ax
-cmp ax, bx 
-jne branch_297_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_298_end_cmp
-branch_297_cmp_fail:
-push_operand 0 ; cmp false
-branch_298_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_303_else
-; then:
-push_operand 0
-
-jmp branch_304_endif
-branch_303_else:
-; else:
-mov ax, 0
-call seekle
-;optimized
-mov bx, 9
-pop_operand ax
-cmp ax, bx 
-jne branch_299_cmp_fail
-push_operand 1 ; cmp true
-jmp branch_300_end_cmp
-branch_299_cmp_fail:
-push_operand 0 ; cmp false
-branch_300_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_301_else
-; then:
-push_operand fun_15
-push_operand CURRENT_RECORD
-
-jmp branch_302_endif
-branch_301_else:
-; else:
 jmp death
-branch_302_endif:
-
-branch_304_endif:
-
-branch_306_endif:
-
-branch_308_endif:
-
 branch_310_endif:
 
 branch_312_endif:
@@ -2268,35 +580,409 @@ branch_316_endif:
 branch_318_endif:
 
 branch_320_endif:
+
+branch_322_endif:
+
+branch_324_endif:
+
+branch_326_endif:
+
+branch_328_endif:
+bufferize
+ret
+
+fun_16:
+pusha
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_22_else
+popa
+push_operand fun_2_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
+bufferize
+ret
+
+fun_2_tuple:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_23_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_24_end_cmp
+branch_23_cmp_fail:
+push_operand 0 ; cmp false
+branch_24_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_307_else
+; then:
+push_operand 16
+
+jmp branch_308_endif
+branch_307_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 1
+pop_operand ax
+cmp ax, bx 
+jne branch_25_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_26_end_cmp
+branch_25_cmp_fail:
+push_operand 0 ; cmp false
+branch_26_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_305_else
+; then:
+push_operand 97
+
+jmp branch_306_endif
+branch_305_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+cmp ax, bx 
+jne branch_27_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_28_end_cmp
+branch_27_cmp_fail:
+push_operand 0 ; cmp false
+branch_28_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_303_else
+; then:
+push_operand 14
+
+jmp branch_304_endif
+branch_303_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 3
+pop_operand ax
+cmp ax, bx 
+jne branch_29_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_30_end_cmp
+branch_29_cmp_fail:
+push_operand 0 ; cmp false
+branch_30_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_301_else
+; then:
+push_operand 0
+
+jmp branch_302_endif
+branch_301_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 4
+pop_operand ax
+cmp ax, bx 
+jne branch_31_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_32_end_cmp
+branch_31_cmp_fail:
+push_operand 0 ; cmp false
+branch_32_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_299_else
+; then:
+push_operand 0
+
+jmp branch_300_endif
+branch_299_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 5
+pop_operand ax
+cmp ax, bx 
+jne branch_33_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_34_end_cmp
+branch_33_cmp_fail:
+push_operand 0 ; cmp false
+branch_34_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_297_else
+; then:
+push_operand 0
+
+jmp branch_298_endif
+branch_297_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 6
+pop_operand ax
+cmp ax, bx 
+jne branch_35_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_36_end_cmp
+branch_35_cmp_fail:
+push_operand 0 ; cmp false
+branch_36_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_295_else
+; then:
+push_operand 0
+
+jmp branch_296_endif
+branch_295_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 7
+pop_operand ax
+cmp ax, bx 
+jne branch_37_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_38_end_cmp
+branch_37_cmp_fail:
+push_operand 0 ; cmp false
+branch_38_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_293_else
+; then:
+push_operand 0
+
+jmp branch_294_endif
+branch_293_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 8
+pop_operand ax
+cmp ax, bx 
+jne branch_39_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_40_end_cmp
+branch_39_cmp_fail:
+push_operand 0 ; cmp false
+branch_40_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_291_else
+; then:
+push_operand 0
+
+jmp branch_292_endif
+branch_291_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 9
+pop_operand ax
+cmp ax, bx 
+jne branch_41_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_42_end_cmp
+branch_41_cmp_fail:
+push_operand 0 ; cmp false
+branch_42_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_289_else
+; then:
+push_operand fun_15
+push_operand CURRENT_RECORD
+
+jmp branch_290_endif
+branch_289_else:
+; else:
+jmp death
+branch_290_endif:
+
+branch_292_endif:
+
+branch_294_endif:
+
+branch_296_endif:
+
+branch_298_endif:
+
+branch_300_endif:
+
+branch_302_endif:
+
+branch_304_endif:
+
+branch_306_endif:
+
+branch_308_endif:
 bufferize
 ret
 
 fun_15:
+pusha
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
 push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_43_else
+popa
+push_operand fun_3_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
 bufferize
 ret
 
-fun_18:
+fun_3_tuple:
 mov ax, 0
 call seekle
 ;optimized
 mov bx, 0
 pop_operand ax
 cmp ax, bx 
-jne branch_321_cmp_fail
+jne branch_44_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_322_end_cmp
-branch_321_cmp_fail:
+jmp branch_45_end_cmp
+branch_44_cmp_fail:
 push_operand 0 ; cmp false
-branch_322_end_cmp:
+branch_45_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_359_else
+jne branch_287_else
 ; then:
 push_operand 16
 
-jmp branch_360_endif
-branch_359_else:
+jmp branch_288_endif
+branch_287_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2304,20 +990,20 @@ call seekle
 mov bx, 1
 pop_operand ax
 cmp ax, bx 
-jne branch_323_cmp_fail
+jne branch_46_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_324_end_cmp
-branch_323_cmp_fail:
+jmp branch_47_end_cmp
+branch_46_cmp_fail:
 push_operand 0 ; cmp false
-branch_324_end_cmp:
+branch_47_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_357_else
+jne branch_285_else
 ; then:
-push_operand 66
+push_operand 110
 
-jmp branch_358_endif
-branch_357_else:
+jmp branch_286_endif
+branch_285_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2325,20 +1011,20 @@ call seekle
 mov bx, 2
 pop_operand ax
 cmp ax, bx 
-jne branch_325_cmp_fail
+jne branch_48_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_326_end_cmp
-branch_325_cmp_fail:
+jmp branch_49_end_cmp
+branch_48_cmp_fail:
 push_operand 0 ; cmp false
-branch_326_end_cmp:
+branch_49_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_355_else
+jne branch_283_else
 ; then:
 push_operand 14
 
-jmp branch_356_endif
-branch_355_else:
+jmp branch_284_endif
+branch_283_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2346,20 +1032,20 @@ call seekle
 mov bx, 3
 pop_operand ax
 cmp ax, bx 
-jne branch_327_cmp_fail
+jne branch_50_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_328_end_cmp
-branch_327_cmp_fail:
+jmp branch_51_end_cmp
+branch_50_cmp_fail:
 push_operand 0 ; cmp false
-branch_328_end_cmp:
+branch_51_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_353_else
+jne branch_281_else
 ; then:
 push_operand 0
 
-jmp branch_354_endif
-branch_353_else:
+jmp branch_282_endif
+branch_281_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2367,20 +1053,20 @@ call seekle
 mov bx, 4
 pop_operand ax
 cmp ax, bx 
-jne branch_329_cmp_fail
+jne branch_52_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_330_end_cmp
-branch_329_cmp_fail:
+jmp branch_53_end_cmp
+branch_52_cmp_fail:
 push_operand 0 ; cmp false
-branch_330_end_cmp:
+branch_53_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_351_else
+jne branch_279_else
 ; then:
 push_operand 0
 
-jmp branch_352_endif
-branch_351_else:
+jmp branch_280_endif
+branch_279_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2388,20 +1074,20 @@ call seekle
 mov bx, 5
 pop_operand ax
 cmp ax, bx 
-jne branch_331_cmp_fail
+jne branch_54_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_332_end_cmp
-branch_331_cmp_fail:
+jmp branch_55_end_cmp
+branch_54_cmp_fail:
 push_operand 0 ; cmp false
-branch_332_end_cmp:
+branch_55_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_349_else
+jne branch_277_else
 ; then:
 push_operand 0
 
-jmp branch_350_endif
-branch_349_else:
+jmp branch_278_endif
+branch_277_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2409,20 +1095,20 @@ call seekle
 mov bx, 6
 pop_operand ax
 cmp ax, bx 
-jne branch_333_cmp_fail
+jne branch_56_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_334_end_cmp
-branch_333_cmp_fail:
+jmp branch_57_end_cmp
+branch_56_cmp_fail:
 push_operand 0 ; cmp false
-branch_334_end_cmp:
+branch_57_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_347_else
+jne branch_275_else
 ; then:
 push_operand 0
 
-jmp branch_348_endif
-branch_347_else:
+jmp branch_276_endif
+branch_275_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2430,20 +1116,20 @@ call seekle
 mov bx, 7
 pop_operand ax
 cmp ax, bx 
-jne branch_335_cmp_fail
+jne branch_58_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_336_end_cmp
-branch_335_cmp_fail:
+jmp branch_59_end_cmp
+branch_58_cmp_fail:
 push_operand 0 ; cmp false
-branch_336_end_cmp:
+branch_59_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_345_else
+jne branch_273_else
 ; then:
 push_operand 0
 
-jmp branch_346_endif
-branch_345_else:
+jmp branch_274_endif
+branch_273_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2451,20 +1137,20 @@ call seekle
 mov bx, 8
 pop_operand ax
 cmp ax, bx 
-jne branch_337_cmp_fail
+jne branch_60_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_338_end_cmp
-branch_337_cmp_fail:
+jmp branch_61_end_cmp
+branch_60_cmp_fail:
 push_operand 0 ; cmp false
-branch_338_end_cmp:
+branch_61_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_343_else
+jne branch_271_else
 ; then:
 push_operand 0
 
-jmp branch_344_endif
-branch_343_else:
+jmp branch_272_endif
+branch_271_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2472,71 +1158,134 @@ call seekle
 mov bx, 9
 pop_operand ax
 cmp ax, bx 
-jne branch_339_cmp_fail
+jne branch_62_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_340_end_cmp
-branch_339_cmp_fail:
+jmp branch_63_end_cmp
+branch_62_cmp_fail:
 push_operand 0 ; cmp false
-branch_340_end_cmp:
+branch_63_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_341_else
+jne branch_269_else
 ; then:
-push_operand fun_17
+push_operand fun_14
 push_operand CURRENT_RECORD
 
-jmp branch_342_endif
-branch_341_else:
+jmp branch_270_endif
+branch_269_else:
 ; else:
 jmp death
-branch_342_endif:
+branch_270_endif:
 
-branch_344_endif:
+branch_272_endif:
 
-branch_346_endif:
+branch_274_endif:
 
-branch_348_endif:
+branch_276_endif:
 
-branch_350_endif:
+branch_278_endif:
 
-branch_352_endif:
+branch_280_endif:
 
-branch_354_endif:
+branch_282_endif:
 
-branch_356_endif:
+branch_284_endif:
 
-branch_358_endif:
+branch_286_endif:
 
-branch_360_endif:
+branch_288_endif:
 bufferize
 ret
 
-fun_17:
+fun_14:
+pusha
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
 push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_64_else
+popa
+push_operand fun_4_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
 bufferize
 ret
 
-fun_20:
+fun_4_tuple:
 mov ax, 0
 call seekle
 ;optimized
 mov bx, 0
 pop_operand ax
 cmp ax, bx 
-jne branch_361_cmp_fail
+jne branch_65_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_362_end_cmp
-branch_361_cmp_fail:
+jmp branch_66_end_cmp
+branch_65_cmp_fail:
 push_operand 0 ; cmp false
-branch_362_end_cmp:
+branch_66_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_399_else
+jne branch_267_else
 ; then:
 push_operand 16
 
-jmp branch_400_endif
-branch_399_else:
+jmp branch_268_endif
+branch_267_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2544,20 +1293,20 @@ call seekle
 mov bx, 1
 pop_operand ax
 cmp ax, bx 
-jne branch_363_cmp_fail
+jne branch_67_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_364_end_cmp
-branch_363_cmp_fail:
+jmp branch_68_end_cmp
+branch_67_cmp_fail:
 push_operand 0 ; cmp false
-branch_364_end_cmp:
+branch_68_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_397_else
+jne branch_265_else
 ; then:
-push_operand 66
+push_operand 97
 
-jmp branch_398_endif
-branch_397_else:
+jmp branch_266_endif
+branch_265_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2565,20 +1314,20 @@ call seekle
 mov bx, 2
 pop_operand ax
 cmp ax, bx 
-jne branch_365_cmp_fail
+jne branch_69_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_366_end_cmp
-branch_365_cmp_fail:
+jmp branch_70_end_cmp
+branch_69_cmp_fail:
 push_operand 0 ; cmp false
-branch_366_end_cmp:
+branch_70_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_395_else
+jne branch_263_else
 ; then:
 push_operand 14
 
-jmp branch_396_endif
-branch_395_else:
+jmp branch_264_endif
+branch_263_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2586,20 +1335,20 @@ call seekle
 mov bx, 3
 pop_operand ax
 cmp ax, bx 
-jne branch_367_cmp_fail
+jne branch_71_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_368_end_cmp
-branch_367_cmp_fail:
+jmp branch_72_end_cmp
+branch_71_cmp_fail:
 push_operand 0 ; cmp false
-branch_368_end_cmp:
+branch_72_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_393_else
+jne branch_261_else
 ; then:
 push_operand 0
 
-jmp branch_394_endif
-branch_393_else:
+jmp branch_262_endif
+branch_261_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2607,20 +1356,20 @@ call seekle
 mov bx, 4
 pop_operand ax
 cmp ax, bx 
-jne branch_369_cmp_fail
+jne branch_73_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_370_end_cmp
-branch_369_cmp_fail:
+jmp branch_74_end_cmp
+branch_73_cmp_fail:
 push_operand 0 ; cmp false
-branch_370_end_cmp:
+branch_74_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_391_else
+jne branch_259_else
 ; then:
 push_operand 0
 
-jmp branch_392_endif
-branch_391_else:
+jmp branch_260_endif
+branch_259_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2628,20 +1377,20 @@ call seekle
 mov bx, 5
 pop_operand ax
 cmp ax, bx 
-jne branch_371_cmp_fail
+jne branch_75_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_372_end_cmp
-branch_371_cmp_fail:
+jmp branch_76_end_cmp
+branch_75_cmp_fail:
 push_operand 0 ; cmp false
-branch_372_end_cmp:
+branch_76_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_389_else
+jne branch_257_else
 ; then:
 push_operand 0
 
-jmp branch_390_endif
-branch_389_else:
+jmp branch_258_endif
+branch_257_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2649,20 +1398,20 @@ call seekle
 mov bx, 6
 pop_operand ax
 cmp ax, bx 
-jne branch_373_cmp_fail
+jne branch_77_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_374_end_cmp
-branch_373_cmp_fail:
+jmp branch_78_end_cmp
+branch_77_cmp_fail:
 push_operand 0 ; cmp false
-branch_374_end_cmp:
+branch_78_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_387_else
+jne branch_255_else
 ; then:
 push_operand 0
 
-jmp branch_388_endif
-branch_387_else:
+jmp branch_256_endif
+branch_255_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2670,20 +1419,20 @@ call seekle
 mov bx, 7
 pop_operand ax
 cmp ax, bx 
-jne branch_375_cmp_fail
+jne branch_79_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_376_end_cmp
-branch_375_cmp_fail:
+jmp branch_80_end_cmp
+branch_79_cmp_fail:
 push_operand 0 ; cmp false
-branch_376_end_cmp:
+branch_80_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_385_else
+jne branch_253_else
 ; then:
 push_operand 0
 
-jmp branch_386_endif
-branch_385_else:
+jmp branch_254_endif
+branch_253_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2691,20 +1440,20 @@ call seekle
 mov bx, 8
 pop_operand ax
 cmp ax, bx 
-jne branch_377_cmp_fail
+jne branch_81_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_378_end_cmp
-branch_377_cmp_fail:
+jmp branch_82_end_cmp
+branch_81_cmp_fail:
 push_operand 0 ; cmp false
-branch_378_end_cmp:
+branch_82_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_383_else
+jne branch_251_else
 ; then:
 push_operand 0
 
-jmp branch_384_endif
-branch_383_else:
+jmp branch_252_endif
+branch_251_else:
 ; else:
 mov ax, 0
 call seekle
@@ -2712,46 +1461,1258 @@ call seekle
 mov bx, 9
 pop_operand ax
 cmp ax, bx 
-jne branch_379_cmp_fail
+jne branch_83_cmp_fail
 push_operand 1 ; cmp true
-jmp branch_380_end_cmp
-branch_379_cmp_fail:
+jmp branch_84_end_cmp
+branch_83_cmp_fail:
 push_operand 0 ; cmp false
-branch_380_end_cmp:
+branch_84_end_cmp:
 pop_operand ax
 cmp ax, 1 
-jne branch_381_else
+jne branch_249_else
 ; then:
-push_operand fun_19
+push_operand fun_13
 push_operand CURRENT_RECORD
 
-jmp branch_382_endif
-branch_381_else:
+jmp branch_250_endif
+branch_249_else:
 ; else:
 jmp death
-branch_382_endif:
+branch_250_endif:
 
-branch_384_endif:
+branch_252_endif:
 
-branch_386_endif:
+branch_254_endif:
 
-branch_388_endif:
+branch_256_endif:
 
-branch_390_endif:
+branch_258_endif:
 
-branch_392_endif:
+branch_260_endif:
 
-branch_394_endif:
+branch_262_endif:
 
-branch_396_endif:
+branch_264_endif:
 
-branch_398_endif:
+branch_266_endif:
 
-branch_400_endif:
+branch_268_endif:
 bufferize
 ret
 
-fun_19:
+fun_13:
+pusha
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_85_else
+popa
+push_operand fun_5_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
+bufferize
+ret
+
+fun_5_tuple:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_86_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_87_end_cmp
+branch_86_cmp_fail:
+push_operand 0 ; cmp false
+branch_87_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_247_else
+; then:
+push_operand 16
+
+jmp branch_248_endif
+branch_247_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 1
+pop_operand ax
+cmp ax, bx 
+jne branch_88_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_89_end_cmp
+branch_88_cmp_fail:
+push_operand 0 ; cmp false
+branch_89_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_245_else
+; then:
+push_operand 110
+
+jmp branch_246_endif
+branch_245_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+cmp ax, bx 
+jne branch_90_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_91_end_cmp
+branch_90_cmp_fail:
+push_operand 0 ; cmp false
+branch_91_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_243_else
+; then:
+push_operand 14
+
+jmp branch_244_endif
+branch_243_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 3
+pop_operand ax
+cmp ax, bx 
+jne branch_92_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_93_end_cmp
+branch_92_cmp_fail:
+push_operand 0 ; cmp false
+branch_93_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_241_else
+; then:
+push_operand 0
+
+jmp branch_242_endif
+branch_241_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 4
+pop_operand ax
+cmp ax, bx 
+jne branch_94_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_95_end_cmp
+branch_94_cmp_fail:
+push_operand 0 ; cmp false
+branch_95_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_239_else
+; then:
+push_operand 0
+
+jmp branch_240_endif
+branch_239_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 5
+pop_operand ax
+cmp ax, bx 
+jne branch_96_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_97_end_cmp
+branch_96_cmp_fail:
+push_operand 0 ; cmp false
+branch_97_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_237_else
+; then:
+push_operand 0
+
+jmp branch_238_endif
+branch_237_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 6
+pop_operand ax
+cmp ax, bx 
+jne branch_98_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_99_end_cmp
+branch_98_cmp_fail:
+push_operand 0 ; cmp false
+branch_99_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_235_else
+; then:
+push_operand 0
+
+jmp branch_236_endif
+branch_235_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 7
+pop_operand ax
+cmp ax, bx 
+jne branch_100_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_101_end_cmp
+branch_100_cmp_fail:
+push_operand 0 ; cmp false
+branch_101_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_233_else
+; then:
+push_operand 0
+
+jmp branch_234_endif
+branch_233_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 8
+pop_operand ax
+cmp ax, bx 
+jne branch_102_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_103_end_cmp
+branch_102_cmp_fail:
+push_operand 0 ; cmp false
+branch_103_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_231_else
+; then:
+push_operand 0
+
+jmp branch_232_endif
+branch_231_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 9
+pop_operand ax
+cmp ax, bx 
+jne branch_104_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_105_end_cmp
+branch_104_cmp_fail:
+push_operand 0 ; cmp false
+branch_105_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_229_else
+; then:
+push_operand fun_12
+push_operand CURRENT_RECORD
+
+jmp branch_230_endif
+branch_229_else:
+; else:
+jmp death
+branch_230_endif:
+
+branch_232_endif:
+
+branch_234_endif:
+
+branch_236_endif:
+
+branch_238_endif:
+
+branch_240_endif:
+
+branch_242_endif:
+
+branch_244_endif:
+
+branch_246_endif:
+
+branch_248_endif:
+bufferize
+ret
+
+fun_12:
+pusha
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_106_else
+popa
+push_operand fun_6_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
+bufferize
+ret
+
+fun_6_tuple:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_107_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_108_end_cmp
+branch_107_cmp_fail:
+push_operand 0 ; cmp false
+branch_108_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_227_else
+; then:
+push_operand 16
+
+jmp branch_228_endif
+branch_227_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 1
+pop_operand ax
+cmp ax, bx 
+jne branch_109_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_110_end_cmp
+branch_109_cmp_fail:
+push_operand 0 ; cmp false
+branch_110_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_225_else
+; then:
+push_operand 97
+
+jmp branch_226_endif
+branch_225_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+cmp ax, bx 
+jne branch_111_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_112_end_cmp
+branch_111_cmp_fail:
+push_operand 0 ; cmp false
+branch_112_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_223_else
+; then:
+push_operand 14
+
+jmp branch_224_endif
+branch_223_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 3
+pop_operand ax
+cmp ax, bx 
+jne branch_113_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_114_end_cmp
+branch_113_cmp_fail:
+push_operand 0 ; cmp false
+branch_114_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_221_else
+; then:
+push_operand 0
+
+jmp branch_222_endif
+branch_221_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 4
+pop_operand ax
+cmp ax, bx 
+jne branch_115_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_116_end_cmp
+branch_115_cmp_fail:
+push_operand 0 ; cmp false
+branch_116_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_219_else
+; then:
+push_operand 0
+
+jmp branch_220_endif
+branch_219_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 5
+pop_operand ax
+cmp ax, bx 
+jne branch_117_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_118_end_cmp
+branch_117_cmp_fail:
+push_operand 0 ; cmp false
+branch_118_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_217_else
+; then:
+push_operand 0
+
+jmp branch_218_endif
+branch_217_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 6
+pop_operand ax
+cmp ax, bx 
+jne branch_119_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_120_end_cmp
+branch_119_cmp_fail:
+push_operand 0 ; cmp false
+branch_120_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_215_else
+; then:
+push_operand 0
+
+jmp branch_216_endif
+branch_215_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 7
+pop_operand ax
+cmp ax, bx 
+jne branch_121_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_122_end_cmp
+branch_121_cmp_fail:
+push_operand 0 ; cmp false
+branch_122_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_213_else
+; then:
+push_operand 0
+
+jmp branch_214_endif
+branch_213_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 8
+pop_operand ax
+cmp ax, bx 
+jne branch_123_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_124_end_cmp
+branch_123_cmp_fail:
+push_operand 0 ; cmp false
+branch_124_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_211_else
+; then:
+push_operand 0
+
+jmp branch_212_endif
+branch_211_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 9
+pop_operand ax
+cmp ax, bx 
+jne branch_125_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_126_end_cmp
+branch_125_cmp_fail:
+push_operand 0 ; cmp false
+branch_126_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_209_else
+; then:
+push_operand fun_11
+push_operand CURRENT_RECORD
+
+jmp branch_210_endif
+branch_209_else:
+; else:
+jmp death
+branch_210_endif:
+
+branch_212_endif:
+
+branch_214_endif:
+
+branch_216_endif:
+
+branch_218_endif:
+
+branch_220_endif:
+
+branch_222_endif:
+
+branch_224_endif:
+
+branch_226_endif:
+
+branch_228_endif:
+bufferize
+ret
+
+fun_11:
+pusha
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_127_else
+popa
+push_operand fun_7_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
+bufferize
+ret
+
+fun_7_tuple:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_128_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_129_end_cmp
+branch_128_cmp_fail:
+push_operand 0 ; cmp false
+branch_129_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_207_else
+; then:
+push_operand 16
+
+jmp branch_208_endif
+branch_207_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 1
+pop_operand ax
+cmp ax, bx 
+jne branch_130_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_131_end_cmp
+branch_130_cmp_fail:
+push_operand 0 ; cmp false
+branch_131_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_205_else
+; then:
+push_operand 10
+
+jmp branch_206_endif
+branch_205_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+cmp ax, bx 
+jne branch_132_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_133_end_cmp
+branch_132_cmp_fail:
+push_operand 0 ; cmp false
+branch_133_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_203_else
+; then:
+push_operand 14
+
+jmp branch_204_endif
+branch_203_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 3
+pop_operand ax
+cmp ax, bx 
+jne branch_134_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_135_end_cmp
+branch_134_cmp_fail:
+push_operand 0 ; cmp false
+branch_135_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_201_else
+; then:
+push_operand 0
+
+jmp branch_202_endif
+branch_201_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 4
+pop_operand ax
+cmp ax, bx 
+jne branch_136_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_137_end_cmp
+branch_136_cmp_fail:
+push_operand 0 ; cmp false
+branch_137_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_199_else
+; then:
+push_operand 0
+
+jmp branch_200_endif
+branch_199_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 5
+pop_operand ax
+cmp ax, bx 
+jne branch_138_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_139_end_cmp
+branch_138_cmp_fail:
+push_operand 0 ; cmp false
+branch_139_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_197_else
+; then:
+push_operand 0
+
+jmp branch_198_endif
+branch_197_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 6
+pop_operand ax
+cmp ax, bx 
+jne branch_140_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_141_end_cmp
+branch_140_cmp_fail:
+push_operand 0 ; cmp false
+branch_141_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_195_else
+; then:
+push_operand 0
+
+jmp branch_196_endif
+branch_195_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 7
+pop_operand ax
+cmp ax, bx 
+jne branch_142_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_143_end_cmp
+branch_142_cmp_fail:
+push_operand 0 ; cmp false
+branch_143_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_193_else
+; then:
+push_operand 0
+
+jmp branch_194_endif
+branch_193_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 8
+pop_operand ax
+cmp ax, bx 
+jne branch_144_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_145_end_cmp
+branch_144_cmp_fail:
+push_operand 0 ; cmp false
+branch_145_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_191_else
+; then:
+push_operand 0
+
+jmp branch_192_endif
+branch_191_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 9
+pop_operand ax
+cmp ax, bx 
+jne branch_146_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_147_end_cmp
+branch_146_cmp_fail:
+push_operand 0 ; cmp false
+branch_147_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_189_else
+; then:
+push_operand fun_10
+push_operand CURRENT_RECORD
+
+jmp branch_190_endif
+branch_189_else:
+; else:
+jmp death
+branch_190_endif:
+
+branch_192_endif:
+
+branch_194_endif:
+
+branch_196_endif:
+
+branch_198_endif:
+
+branch_200_endif:
+
+branch_202_endif:
+
+branch_204_endif:
+
+branch_206_endif:
+
+branch_208_endif:
+bufferize
+ret
+
+fun_10:
+pusha
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 8
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 7
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 6
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 4
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 2
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 0
+make_record
+call bx
+debufferize
+call_interrupt branch_148_else
+popa
+push_operand fun_8_tuple
+push_operand CURRENT_RECORD
+push_operand 9
+make_record
+call bx
+debufferize
+call_callback
+bufferize
+ret
+
+fun_8_tuple:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_149_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_150_end_cmp
+branch_149_cmp_fail:
+push_operand 0 ; cmp false
+branch_150_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_187_else
+; then:
+push_operand 16
+
+jmp branch_188_endif
+branch_187_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 1
+pop_operand ax
+cmp ax, bx 
+jne branch_151_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_152_end_cmp
+branch_151_cmp_fail:
+push_operand 0 ; cmp false
+branch_152_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_185_else
+; then:
+push_operand 13
+
+jmp branch_186_endif
+branch_185_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+cmp ax, bx 
+jne branch_153_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_154_end_cmp
+branch_153_cmp_fail:
+push_operand 0 ; cmp false
+branch_154_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_183_else
+; then:
+push_operand 14
+
+jmp branch_184_endif
+branch_183_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 3
+pop_operand ax
+cmp ax, bx 
+jne branch_155_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_156_end_cmp
+branch_155_cmp_fail:
+push_operand 0 ; cmp false
+branch_156_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_181_else
+; then:
+push_operand 0
+
+jmp branch_182_endif
+branch_181_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 4
+pop_operand ax
+cmp ax, bx 
+jne branch_157_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_158_end_cmp
+branch_157_cmp_fail:
+push_operand 0 ; cmp false
+branch_158_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_179_else
+; then:
+push_operand 0
+
+jmp branch_180_endif
+branch_179_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 5
+pop_operand ax
+cmp ax, bx 
+jne branch_159_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_160_end_cmp
+branch_159_cmp_fail:
+push_operand 0 ; cmp false
+branch_160_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_177_else
+; then:
+push_operand 0
+
+jmp branch_178_endif
+branch_177_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 6
+pop_operand ax
+cmp ax, bx 
+jne branch_161_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_162_end_cmp
+branch_161_cmp_fail:
+push_operand 0 ; cmp false
+branch_162_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_175_else
+; then:
+push_operand 0
+
+jmp branch_176_endif
+branch_175_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 7
+pop_operand ax
+cmp ax, bx 
+jne branch_163_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_164_end_cmp
+branch_163_cmp_fail:
+push_operand 0 ; cmp false
+branch_164_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_173_else
+; then:
+push_operand 0
+
+jmp branch_174_endif
+branch_173_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 8
+pop_operand ax
+cmp ax, bx 
+jne branch_165_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_166_end_cmp
+branch_165_cmp_fail:
+push_operand 0 ; cmp false
+branch_166_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_171_else
+; then:
+push_operand 0
+
+jmp branch_172_endif
+branch_171_else:
+; else:
+mov ax, 0
+call seekle
+;optimized
+mov bx, 9
+pop_operand ax
+cmp ax, bx 
+jne branch_167_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_168_end_cmp
+branch_167_cmp_fail:
+push_operand 0 ; cmp false
+branch_168_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_169_else
+; then:
+push_operand fun_9
+push_operand CURRENT_RECORD
+
+jmp branch_170_endif
+branch_169_else:
+; else:
+jmp death
+branch_170_endif:
+
+branch_172_endif:
+
+branch_174_endif:
+
+branch_176_endif:
+
+branch_178_endif:
+
+branch_180_endif:
+
+branch_182_endif:
+
+branch_184_endif:
+
+branch_186_endif:
+
+branch_188_endif:
+bufferize
+ret
+
+fun_9:
 push_operand 0
 bufferize
 ret
@@ -3033,4 +2994,4 @@ NEW_LINE:
 
 start_of_end:
 
-times 16384-($-$$) db 0x00
+times 18432-($-$$) db 0x00

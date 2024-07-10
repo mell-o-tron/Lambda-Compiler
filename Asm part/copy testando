@@ -284,11 +284,14 @@ call print_string
 ;print_fun_pointer 7
 ;nl
 
+
+mov [INT_RESULT + 4], word 17
+
 ; push_operand fckin_template
 call template_create_tuple
 push_operand CURRENT_RECORD
 
-push_operand 7
+push_operand 3
 
 make_record
 

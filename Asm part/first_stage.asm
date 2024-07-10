@@ -25,9 +25,9 @@ _main16:
 	xor bx, bx
     mov es, bx
 
-	;read the stage 2 bootloader (32 sectors)
+	;read the stage 2 bootloader (35 sectors)
 	mov bx, STAGE_2_LOC
-	mov al, 32			; read 32 sectors
+	mov al, 35			; read 35 sectors
 	mov ch, 0x00		; from cylinder 0
 	mov cl, 0x02		; from sector 2 (counting from 1)
 	mov dh, 0x00		; from head 0

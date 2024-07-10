@@ -48,19 +48,25 @@ let rec compile (e: exp) (depth:int) = (match e with
           ( fst c1 ^ "pop_operand ax\ncmp ax, 1 \njne " ^ l1 ^ "\n; then:\n" ^ (fst c2) ^ "\njmp " ^ l2 ^ "\n"^ l1 ^":\n; else:\n" ^ (fst c3) ^ "\n" ^ l2 ^ ":\n",
             snd c1 ^ snd c2 ^ snd c3 )
   | Interrupt (e) ->
-          let cn =  compile (Apply (e, Aexp(IntConst(0)))) (depth) in
-          let c1 = compile (Apply (e,  Aexp(IntConst(1)))) (depth) in
-          let c2 = compile (Apply (e,  Aexp(IntConst(2)))) (depth) in
-          let c3 = compile (Apply (e,  Aexp(IntConst(3)))) (depth) in
-          let c4 = compile (Apply (e,  Aexp(IntConst(4)))) (depth) in
-          let c5 = compile (Apply (e,  Aexp(IntConst(5)))) (depth) in
-          let c6 = compile (Apply (e,  Aexp(IntConst(6)))) (depth) in
-          let c7 = compile (Apply (e,  Aexp(IntConst(7)))) (depth) in
-          let c8 = compile (Apply (e,  Aexp(IntConst(8)))) (depth) in
-          let cb = compile (Apply (e,  Aexp(IntConst(9)))) (depth) in
-          ("pusha\n" ^ fst c8 ^ fst c7 ^ fst c6 ^ fst c5 ^ fst c4 ^ fst c3 ^ fst c2 ^ fst c1 ^ fst cn ^
-          "call_interrupt\npopa\n" ^ fst cb ^ "call_callback\n",
-          snd cn ^ snd c1 ^ snd c2 ^ snd c3 ^ snd c4 ^ snd c5 ^ snd c6 ^ snd c7 ^ snd c8 ^ snd cb)
+          let l1 = fresh_jmp() ^ "_else" in
+          let f_tuple = fresh_name () ^ "_tuple" in
+          let ct = (match e with 
+            | Lambda e1 -> compile_named_lambda e1 f_tuple depth
+            | _ -> failwith "interrupt argument is not a tuple"
+          ) in
+          let cn = call_tuple f_tuple 0 in
+          let c1 = call_tuple f_tuple 1 in
+          let c2 = call_tuple f_tuple 2 in
+          let c3 = call_tuple f_tuple 3 in
+          let c4 = call_tuple f_tuple 4 in
+          let c5 = call_tuple f_tuple 5 in
+          let c6 = call_tuple f_tuple 6 in
+          let c7 = call_tuple f_tuple 7 in
+          let c8 = call_tuple f_tuple 8 in
+          let cb = call_tuple f_tuple 9 in
+          ("pusha\n" ^ c8 ^ c7 ^ c6 ^ c5 ^ c4 ^ c3 ^ c2 ^ c1 ^ cn ^
+          "call_interrupt " ^ l1 ^ "\npopa\n" ^ cb ^ "call_callback\n",
+          snd ct)
 
   | Die -> ("jmp death", "")
   
@@ -124,7 +130,13 @@ and compile_bexp (b: bexp) (depth : int) = (match b with
           let l1 = fresh_jmp() ^ "_cmp_fail" in
           let l2 = fresh_jmp() ^ "_end_cmp" in
           ( fst c1 ^ fst c2 ^ "pop_operand bx\npop_operand ax\ncmp ax, bx \n" ^ op ^ " " ^ l1 ^ "\npush_operand 1 ; cmp true\njmp " ^ l2 ^ "\n"^ l1 ^":\npush_operand 0 ; cmp false\n" ^ l2 ^ ":\n",
-            snd c1 ^ snd c2 ));;
+            snd c1 ^ snd c2 ))
+            
+  and compile_named_lambda (e1 : exp) (funname : string) (depth : int) = 
+    let c = compile(e1)(depth + 1) in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", funname ^":\n"^ (fst c) ^ "bufferize\nret\n\n" ^ (snd c))
+  
+  and call_tuple (funname : string) (i : int) = "push_operand " ^ funname ^ "\npush_operand CURRENT_RECORD\npush_operand " ^ (string_of_int i) ^ "\nmake_record\ncall bx\ndebufferize\n"
+  ;;
             
 
 
