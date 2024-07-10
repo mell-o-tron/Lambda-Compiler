@@ -4,6 +4,14 @@
 
 %{
      (* Auxiliary definitions *)
+     let rec unroll_list lst n = (match lst with
+        | a :: lst1 -> Ast.IfThenElse(
+                          Ast.Bexp(
+                          Ast.Compare(Ast.Equals, Ast.Var(0), Ast.Aexp(Ast.IntConst(n)))),
+                          a,
+                          unroll_list lst1 (n+1))
+        | []        -> Ast.Die
+     )
 %}
 
 /* Tokens declarations */
@@ -62,17 +70,7 @@ expr:
   | a = aexpr                                       {Ast.Aexp(a)}
   | b = bexpr                                       {Ast.Bexp(b)}
   | If e1 = expr Then e2 = expr Else e3 = expr      {Ast.IfThenElse(e1, e2, e3)}
-  | Interrupt LParens n = Number Comma 
-                      e2 = expr Comma 
-                      e3 = expr Comma 
-                      e4 = expr Comma 
-                      e5 = expr Comma 
-                      e6 = expr Comma 
-                      e7 = expr Comma 
-                      e8 = expr Comma 
-                      e9 = expr Comma 
-                      e10 = expr
-              RParens                               {Ast.Interrupt (n, e2, e3, e4, e5, e6, e7, e8, e9, e10) }
+  | Interrupt e = expr                              {Ast.Interrupt (e)}
   | Ycomb                                           {(Ast.Lambda
                                                         (Ast.HOApply (
                                                             (Ast.Lambda
@@ -89,7 +87,13 @@ expr:
                                                                   )))
                                                             )))
                                                       }
+  | LParens s = subtuple RParens                    {Ast.Lambda (unroll_list s 0)}
+  | LParens RParens                                 {Ast.Lambda (Ast.Die)}
   
+subtuple:
+  | e = expr                                        {[e]}
+  | e = expr Comma s = subtuple                     {e::s}
+
 aexpr:
   | n = Number                                      {Ast.IntConst(n)}
   | Quot c = Character Quot                         {Ast.IntConst(Char.code c)}

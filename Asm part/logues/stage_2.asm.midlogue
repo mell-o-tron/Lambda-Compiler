@@ -4,9 +4,16 @@
 pop_operand bx
 call print_dec
 
+
+
 mov bx, END_STRING
 call print_string
 
 jmp $
 
+death:
 
+mov bx, DEAD_STRING
+call print_string
+
+jmp $

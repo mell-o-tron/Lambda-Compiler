@@ -273,3 +273,322 @@ call print_string
 ; push_env print_number
 
 ; GENERATED CODE WILL BE WRITTEN HERE
+
+
+;print_fun_pointer 1
+;print_fun_pointer 2
+;print_fun_pointer 3
+;print_fun_pointer 4
+;print_fun_pointer 5
+;print_fun_pointer 6
+;print_fun_pointer 7
+;nl
+
+; push_operand fckin_template
+call template_create_tuple
+push_operand CURRENT_RECORD
+
+push_operand 7
+
+make_record
+
+call bx
+debufferize
+
+
+; test print
+
+pop_operand bx
+call print_dec
+
+
+mov bx, END_STRING
+call print_string
+
+jmp $
+
+death:
+
+mov bx, DEAD_STRING
+call print_string
+
+jmp $
+
+
+; seekle here
+
+seekle:
+	;mov bx, word [CURRENT_DEPTH]
+	;dec bx
+	;sub bx, ax
+	;mov ax, bx
+
+	mov ebx, CURRENT_RECORD
+
+	loople:
+		cmp ax, 0
+		je endle
+
+		dec ax
+		mov bx, [bx + 2]        ; set the record counter to the current record's definition record (parent)
+		jmp loople
+
+	endle:
+		push_operand [bx + 4]  ; push the value of the actual parameter stored in the obtained record.
+
+		;pusha
+		;mov bx, [bx + 4]
+		;call print_dec
+		;popa
+
+		cmp [bx + 6], word 0
+		je veryendle
+		push_operand [bx + 6]
+	veryendle:
+	ret
+
+
+printle:
+	mov ebx, CURRENT_RECORD
+
+	priple:
+		cmp ax, 0
+		je prindle
+
+		dec ax
+		mov bx, [bx + 2]        ; set the record counter to the current record's definition record (parent)
+		jmp priple
+
+	prindle:
+		pusha
+		mov bx, [bx + 4]
+		call print_dec
+		popa
+	ret
+
+
+; template_create_tuple
+
+template_create_tuple:
+
+push ax
+pusha
+
+mov ax, [INT_RESULT]
+mov [templ_param_0], ax
+
+mov ax, [INT_RESULT + 2]
+mov [templ_param_1], ax
+
+mov ax, [INT_RESULT + 4]
+mov [templ_param_2], ax
+
+mov ax, [INT_RESULT + 6]
+mov [templ_param_3], ax
+
+mov ax, [INT_RESULT + 8]
+mov [templ_param_4], ax
+
+mov ax, [INT_RESULT + 10]
+mov [templ_param_5], ax
+
+mov ax, [INT_RESULT + 12]
+mov [templ_param_6], ax
+
+mov ax, [INT_RESULT + 14]
+mov [templ_param_7], ax
+
+
+xor eax, eax
+xor ebx, ebx
+mov ax, fckin_template
+mov bx, [CURRENT_END]
+mov [TEMPLATE_RESULT], bx
+
+
+copy_loop:
+
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
+
+mov cx, [eax]
+mov [ebx], cx
+add ax, 2
+add bx, 2
+
+cmp ax, fckin_end
+jb copy_loop
+
+popa
+mov ax, [TEMPLATE_RESULT]
+push_operand eax
+pop ax
+ret
+
+
+fckin_template:
+
+mov ax, 0
+mov bx, seekle
+call bx
+
+pop_operand ax
+
+cmp ax, 0
+je near templ_jmp_0
+cmp ax, 1
+je near templ_jmp_1
+cmp ax, 2
+je near templ_jmp_2
+cmp ax, 3
+je near templ_jmp_3
+cmp ax, 4
+je near templ_jmp_4
+cmp ax, 5
+je near templ_jmp_5
+cmp ax, 6
+je near templ_jmp_6
+cmp ax, 7
+je near templ_jmp_7
+jmp death 				;;;; WRANGZ
+
+templ_jmp_0:
+db 0x66, 0xbf
+templ_param_0:
+dw 10
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_1:
+db 0x66, 0xbf
+templ_param_1:
+dw 11
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_2:
+db 0x66, 0xbf
+templ_param_2:
+dw 12
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_3:
+db 0x66, 0xbf
+templ_param_3:
+dw 13
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_4:
+
+db 0x66, 0xbf
+templ_param_4:
+dw 14
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+pusha
+mov bx, 10
+mov ax, print_dec
+call ax
+popa
+
+bufferize
+ret
+
+templ_jmp_5:
+db 0x66, 0xbf
+templ_param_5:
+dw 15
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_6:
+db 0x66, 0xbf
+templ_param_6:
+dw 16
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_7:
+db 0x66, 0xbf
+templ_param_7:
+dw 17
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+fckin_end:
+dw 0, 0
+
+
+%include"./utils/print_string.asm"
+%include"./utils/print_dec.asm"
+
+;print_number:
+	;pop_env bx
+	;push_operand bx
+	;call print_dec
+	;ret
+
+STAGING:
+	db "Separation Confirmed.", 0x0A, 0x0D, 0x00
+
+HERE_STRING:
+	db "Here!", 0x0A, 0x0D, 0x00
+
+END_STRING:
+	db "End.", 0x0A, 0x0D, 0x00
+
+DEAD_STRING:
+	db "Ded.", 0x0A, 0x0D, 0x00
+
+FUN_STRING:
+	db "Fun: ", 0x00
+
+PAR_STRING:
+	db "Par: ", 0x00
+
+REC_STRING:
+	db "Rec: ", 0x00
+
+OP_STRING:
+	db "Op: ", 0x00
+
+NEW_LINE:
+	db 0x0A, 0x0D, 0x00
+
+
+start_of_end:
+
+times 16384-($-$$) db 0x00

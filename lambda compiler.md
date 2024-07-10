@@ -165,3 +165,27 @@ Same as above, but instead of using `make_record` use the following:
 		
 %endmacro
 ```
+
+## Tuples
+A tuple `(a, b, ...)` is compiled to a function:
+```
+\lambda. if L0 = 0 then (compile a) else 
+	(if L0 = 1 then (...) else die)
+```
+
+
+
+## Interrupts
+An interrupt takes a tuple `(n, AL, AH, BL, BH, CL, CH, DL, DH, cont)` where $n$ is the number of the interrupt to be called, the registers are the registers, and `cont` is a function to be called after the execution of the interrupt. The expression:
+
+```
+INT (n, AL, AH, BL, BH, CL, CH, DL, DH, cont)
+```
+
+Returns a tuple:
+
+```
+(AL, AH, BL, BH, CL, CH, DL, DH)
+```
+
+Containing the state of registers after the interrupt call.

@@ -47,19 +47,22 @@ let rec compile (e: exp) (depth:int) = (match e with
           let l2 = fresh_jmp() ^ "_endif" in
           ( fst c1 ^ "pop_operand ax\ncmp ax, 1 \njne " ^ l1 ^ "\n; then:\n" ^ (fst c2) ^ "\njmp " ^ l2 ^ "\n"^ l1 ^":\n; else:\n" ^ (fst c3) ^ "\n" ^ l2 ^ ":\n",
             snd c1 ^ snd c2 ^ snd c3 )
-  | Interrupt (n, e1, e2, e3, e4, e5, e6, e7, e8, callback) -> 
-          let c1 = compile e1 (depth) in
-          let c2 = compile e2 (depth) in
-          let c3 = compile e3 (depth) in
-          let c4 = compile e4 (depth) in
-          let c5 = compile e5 (depth) in
-          let c6 = compile e6 (depth) in
-          let c7 = compile e7 (depth) in
-          let c8 = compile e8 (depth) in
-          let cb = compile callback (depth) in
-          ("pusha\n" ^ fst c8 ^ fst c7 ^ fst c6 ^ fst c5 ^ fst c4 ^ fst c3 ^ fst c2 ^ fst c1 ^ 
-          "call_interrupt "^ (string_of_int n) ^"\npopa\n"^fst cb ^ "call_callback\n", 
-          snd c1 ^ snd c2 ^ snd c3 ^ snd c4 ^ snd c5 ^ snd c6 ^ snd c7 ^ snd c8 ^ snd cb)
+  | Interrupt (e) ->
+          let cn =  compile (Apply (e, Aexp(IntConst(0)))) (depth) in
+          let c1 = compile (Apply (e,  Aexp(IntConst(1)))) (depth) in
+          let c2 = compile (Apply (e,  Aexp(IntConst(2)))) (depth) in
+          let c3 = compile (Apply (e,  Aexp(IntConst(3)))) (depth) in
+          let c4 = compile (Apply (e,  Aexp(IntConst(4)))) (depth) in
+          let c5 = compile (Apply (e,  Aexp(IntConst(5)))) (depth) in
+          let c6 = compile (Apply (e,  Aexp(IntConst(6)))) (depth) in
+          let c7 = compile (Apply (e,  Aexp(IntConst(7)))) (depth) in
+          let c8 = compile (Apply (e,  Aexp(IntConst(8)))) (depth) in
+          let cb = compile (Apply (e,  Aexp(IntConst(9)))) (depth) in
+          ("pusha\n" ^ fst c8 ^ fst c7 ^ fst c6 ^ fst c5 ^ fst c4 ^ fst c3 ^ fst c2 ^ fst c1 ^ fst cn ^
+          "call_interrupt\npopa\n" ^ fst cb ^ "call_callback\n",
+          snd cn ^ snd c1 ^ snd c2 ^ snd c3 ^ snd c4 ^ snd c5 ^ snd c6 ^ snd c7 ^ snd c8 ^ snd cb)
+
+  | Die -> ("jmp death", "")
   
   )
 
