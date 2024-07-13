@@ -81,6 +81,10 @@ push_operand eax
 
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
+;
+; 		pusha
+; 		print_cur_record
+; 		popa
 %endmacro
 
 %macro 	make_HO_record 0
@@ -101,9 +105,42 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 
+; 		pusha
+; 		print_cur_record
+; 		popa
+
+%endmacro
+
+%macro 	make_funky_record 0
+		add AR_AREA_POINTER, 8
+
+		pop_operand ax								; par_def_record
+		mov [AR_AREA_POINTER + 6], ax
+		pop_operand ax								; argument
+		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		pop_operand ax								; throw away the definition record lol
+
+		mov eax, CURRENT_RECORD
+		mov [AR_AREA_POINTER + 2], ax				; definition record is current record
+
+		mov [AR_AREA_POINTER], ax					; save caller record
+
+		pop_operand bx								; function
+
+		mov CURRENT_RECORD, AR_AREA_POINTER
+
+; 		pusha
+; 		print_cur_record
+; 		popa
+
 %endmacro
 
 %macro print_cur_record 0
+	pusha
+	mov ebx, CURRENT_RECORD
+	call print_dec
+	popa
+
 	pusha
 	mov bx, REC_STRING
 	call print_string
@@ -244,7 +281,13 @@ mov [INT_RESULT + 14], dh
 %macro call_callback 0
 call template_create_tuple
 push_operand CURRENT_RECORD
-make_HO_record
+
+make_funky_record
+
+;
+; pusha
+; print_cur_record
+; popa
 
 call bx
 debufferize
@@ -273,7 +316,6 @@ call print_string
 ; push_env print_number
 
 ; GENERATED CODE WILL BE WRITTEN HERE
-pusha
 push_operand fun_1_tuple
 push_operand CURRENT_RECORD
 push_operand 8
@@ -328,6 +370,7 @@ push_operand 0
 make_record
 call bx
 debufferize
+pusha
 call_interrupt branch_1_else
 popa
 push_operand fun_1_tuple
@@ -426,7 +469,6 @@ bufferize
 ret
 
 fun_4:
-pusha
 push_operand fun_2_tuple
 push_operand CURRENT_RECORD
 push_operand 8
@@ -481,6 +523,7 @@ push_operand 0
 make_record
 call bx
 debufferize
+pusha
 call_interrupt branch_3_else
 popa
 push_operand fun_2_tuple
@@ -565,9 +608,21 @@ ret
 fun_3:
 mov ax, 1
 call seekle
+push_operand 0
+make_record
+call bx
+debufferize
+mov ax, 0
+call seekle
+push_operand 0
+make_record
+call bx
+debufferize
+pop_operand bx
+pop_operand ax
+add_integers
 bufferize
 ret
-
 
 ; seekle here
 
@@ -679,6 +734,12 @@ popa
 mov ax, [TEMPLATE_RESULT]
 push_operand eax
 pop ax
+
+pusha
+mov eax, [CURRENT_END]
+add eax, fckin_end - fckin_template + 2
+mov word [CURRENT_END], ax
+popa
 ret
 
 

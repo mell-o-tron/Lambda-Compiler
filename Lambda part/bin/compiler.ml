@@ -64,8 +64,8 @@ let rec compile (e: exp) (depth:int) = (match e with
           let c7 = call_tuple f_tuple 7 in
           let c8 = call_tuple f_tuple 8 in
           let cb = call_tuple f_tuple 9 in
-          ("pusha\n" ^ c8 ^ c7 ^ c6 ^ c5 ^ c4 ^ c3 ^ c2 ^ c1 ^ cn ^
-          "call_interrupt " ^ l1 ^ "\npopa\n" ^ cb ^ "call_callback\n",
+          (c8 ^ c7 ^ c6 ^ c5 ^ c4 ^ c3 ^ c2 ^ c1 ^ cn ^
+          "pusha\ncall_interrupt " ^ l1 ^ "\npopa\n" ^ cb ^ "call_callback\n",
           snd ct)
 
   | Switch (lst, n) -> let (c, l) = compile_switch_params lst in ("mov ax, " ^ (string_of_int n) ^ "\ncall seekle\npop_operand ax\n" ^ compile_switch_jmps (l) (0) ^ fst c

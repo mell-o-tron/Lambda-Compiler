@@ -81,6 +81,10 @@ push_operand eax
 
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
+;
+; 		pusha
+; 		print_cur_record
+; 		popa
 %endmacro
 
 %macro 	make_HO_record 0
@@ -101,9 +105,42 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 
+; 		pusha
+; 		print_cur_record
+; 		popa
+
+%endmacro
+
+%macro 	make_funky_record 0
+		add AR_AREA_POINTER, 8
+
+		pop_operand ax								; par_def_record
+		mov [AR_AREA_POINTER + 6], ax
+		pop_operand ax								; argument
+		mov [AR_AREA_POINTER + 4], ax				; save parameter
+		pop_operand ax								; throw away the definition record lol
+
+		mov eax, CURRENT_RECORD
+		mov [AR_AREA_POINTER + 2], ax				; definition record is current record
+
+		mov [AR_AREA_POINTER], ax					; save caller record
+
+		pop_operand bx								; function
+
+		mov CURRENT_RECORD, AR_AREA_POINTER
+
+; 		pusha
+; 		print_cur_record
+; 		popa
+
 %endmacro
 
 %macro print_cur_record 0
+	pusha
+	mov ebx, CURRENT_RECORD
+	call print_dec
+	popa
+
 	pusha
 	mov bx, REC_STRING
 	call print_string
@@ -244,7 +281,13 @@ mov [INT_RESULT + 14], dh
 %macro call_callback 0
 call template_create_tuple
 push_operand CURRENT_RECORD
-make_HO_record
+
+make_funky_record
+
+;
+; pusha
+; print_cur_record
+; popa
 
 call bx
 debufferize

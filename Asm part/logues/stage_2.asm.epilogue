@@ -1,4 +1,3 @@
-
 ; seekle here
 
 seekle:
@@ -109,6 +108,12 @@ popa
 mov ax, [TEMPLATE_RESULT]
 push_operand eax
 pop ax
+
+pusha
+mov eax, [CURRENT_END]
+add eax, fckin_end - fckin_template + 2
+mov word [CURRENT_END], ax
+popa
 ret
 
 
