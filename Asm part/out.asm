@@ -316,70 +316,17 @@ call print_string
 ; push_env print_number
 
 ; GENERATED CODE WILL BE WRITTEN HERE
-push_operand fun_1_tuple
+push_operand fun_5
 push_operand CURRENT_RECORD
-push_operand 8
+push_operand fun_8
+push_operand CURRENT_RECORD
+make_HO_record
+call bx
+debufferize
+push_operand 65
 make_record
 call bx
 debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 7
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 6
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 5
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 4
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 3
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 2
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 1
-make_record
-call bx
-debufferize
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 0
-make_record
-call bx
-debufferize
-pusha
-call_interrupt branch_1_else
-popa
-push_operand fun_1_tuple
-push_operand CURRENT_RECORD
-push_operand 9
-make_record
-call bx
-debufferize
-call_callback
 
 ; test print
 
@@ -399,134 +346,136 @@ mov bx, DEAD_STRING
 call print_string
 
 jmp $
-fun_1_tuple:
-mov ax, 0
-call seekle
-pop_operand ax
-cmp ax, 0
-je branch_22_switch
-cmp ax, 1
-je branch_21_switch
-cmp ax, 2
-je branch_20_switch
-cmp ax, 3
-je branch_19_switch
-cmp ax, 4
-je branch_18_switch
-cmp ax, 5
-je branch_17_switch
-cmp ax, 6
-je branch_16_switch
-cmp ax, 7
-je branch_15_switch
-cmp ax, 8
-je branch_14_switch
-cmp ax, 9
-je branch_2_switch
-jmp death
-branch_22_switch:
-push_operand 22
-bufferize
-ret
-branch_21_switch:
-push_operand 0
-bufferize
-ret
-branch_20_switch:
-push_operand 0
-bufferize
-ret
-branch_19_switch:
-push_operand 0
-bufferize
-ret
-branch_18_switch:
-push_operand 0
-bufferize
-ret
-branch_17_switch:
-push_operand 0
-bufferize
-ret
-branch_16_switch:
-push_operand 0
-bufferize
-ret
-branch_15_switch:
-push_operand 0
-bufferize
-ret
-branch_14_switch:
-push_operand 0
-bufferize
-ret
-branch_2_switch:
+fun_5:
+push_operand fun_2
+push_operand CURRENT_RECORD
 push_operand fun_4
 push_operand CURRENT_RECORD
+make_HO_record
+call bx
+debufferize
 bufferize
 ret
+
+fun_2:
+mov ax, 1
+call seekle
+push_operand fun_1
+push_operand CURRENT_RECORD
+make_HO_record
+call bx
+debufferize
+bufferize
+ret
+
+fun_1:
+mov ax, 1
+call seekle
+mov ax, 1
+call seekle
+make_HO_record
+call bx
+debufferize
+mov ax, 0
+call seekle
+make_record
+call bx
+debufferize
 bufferize
 ret
 
 fun_4:
-push_operand fun_2_tuple
+mov ax, 1
+call seekle
+push_operand fun_3
+push_operand CURRENT_RECORD
+make_HO_record
+call bx
+debufferize
+bufferize
+ret
+
+fun_3:
+mov ax, 1
+call seekle
+mov ax, 1
+call seekle
+make_HO_record
+call bx
+debufferize
+mov ax, 0
+call seekle
+make_record
+call bx
+debufferize
+bufferize
+ret
+
+fun_8:
+push_operand fun_7
+push_operand CURRENT_RECORD
+bufferize
+ret
+
+fun_7:
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 8
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 7
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 6
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 5
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 4
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 3
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 2
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 1
 make_record
 call bx
 debufferize
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 0
 make_record
 call bx
 debufferize
 pusha
-call_interrupt branch_3_else
+call_interrupt branch_1_else
 popa
-push_operand fun_2_tuple
+push_operand fun_6_tuple
 push_operand CURRENT_RECORD
 push_operand 9
 make_record
@@ -536,49 +485,42 @@ call_callback
 bufferize
 ret
 
-fun_2_tuple:
+fun_6_tuple:
 mov ax, 0
 call seekle
 pop_operand ax
 cmp ax, 0
-je branch_13_switch
-cmp ax, 1
-je branch_12_switch
-cmp ax, 2
 je branch_11_switch
-cmp ax, 3
+cmp ax, 1
 je branch_10_switch
-cmp ax, 4
+cmp ax, 2
 je branch_9_switch
-cmp ax, 5
+cmp ax, 3
 je branch_8_switch
-cmp ax, 6
+cmp ax, 4
 je branch_7_switch
-cmp ax, 7
+cmp ax, 5
 je branch_6_switch
-cmp ax, 8
+cmp ax, 6
 je branch_5_switch
-cmp ax, 9
+cmp ax, 7
 je branch_4_switch
+cmp ax, 8
+je branch_3_switch
+cmp ax, 9
+je branch_2_switch
 jmp death
-branch_13_switch:
-push_operand 22
-bufferize
-ret
-branch_12_switch:
-push_operand 0
-bufferize
-ret
 branch_11_switch:
-push_operand 0
+push_operand 16
 bufferize
 ret
 branch_10_switch:
-push_operand 0
+mov ax, 1
+call seekle
 bufferize
 ret
 branch_9_switch:
-push_operand 0
+push_operand 14
 bufferize
 ret
 branch_8_switch:
@@ -598,29 +540,27 @@ push_operand 0
 bufferize
 ret
 branch_4_switch:
-push_operand fun_3
-push_operand CURRENT_RECORD
+push_operand 0
 bufferize
 ret
+branch_3_switch:
+push_operand 0
 bufferize
 ret
-
-fun_3:
+branch_2_switch:
+mov ax, 2
+call seekle
 mov ax, 1
 call seekle
-push_operand 0
-make_record
-call bx
-debufferize
-mov ax, 0
-call seekle
-push_operand 0
-make_record
-call bx
-debufferize
-pop_operand bx
+;optimized
+mov bx, 1
 pop_operand ax
 add_integers
+make_record
+call bx
+debufferize
+bufferize
+ret
 bufferize
 ret
 
