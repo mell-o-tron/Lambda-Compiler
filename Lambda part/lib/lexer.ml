@@ -32,13 +32,12 @@ let rec token lexbuf =
         | "else"              -> (Else)
         | "Y"                 -> (Ycomb)
         | "INT"               -> (Interrupt)
-        | "'"                 -> (Quot)
+        | "'"                 -> (char lexbuf)
         | white_space         -> (token lexbuf)
         | ","                 -> (Comma)
         | number              -> (
             Number (int_of_string (Sedlexing.Latin1.lexeme lexbuf))
         )
-        | character           -> Character (Sedlexing.Latin1.lexeme lexbuf).[0]
         | "**"                -> (comment lexbuf)
         | eof                 -> (EOF)
         | any                 -> (
@@ -53,6 +52,11 @@ and comment lexbuf =
         | eof                 -> (EOF)
         | any                 -> (comment lexbuf)
         | _                   -> (failwith "Impossible!")
+
+and char lexbuf =
+    match%sedlex lexbuf with
+        | character, "'"      -> Character (Sedlexing.Latin1.lexeme lexbuf).[0]
+        | _                   -> failwith "Character not closed by a quote!"
 
 let tokenize (lexbuf: Sedlexing.lexbuf) =
     token lexbuf

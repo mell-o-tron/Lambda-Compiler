@@ -1,15 +1,18 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+CALLING_DIR="$(pwd)"
+
 if [ -z "$1" ]
 then
     echo "Postprocessor says: Please pass a filename"
     exit 1
 fi
 
-FILENAME="$(pwd)/$1"
+FILENAME="$CALLING_DIR/$1"
 echo "$FILENAME"
 
-cd "Lambda part"
+cd "$SCRIPT_DIR/Lambda part"
 make build
 
 mkdir -p build
@@ -20,5 +23,5 @@ then
     exit 1
 fi
 
-cd "../Asm part"
+cd "$SCRIPT_DIR/Asm part"
 make
