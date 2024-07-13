@@ -1,7 +1,8 @@
 open Parser
 
 let digit = [%sedlex.regexp? '0' .. '9']
-let number = [%sedlex.regexp? Plus digit]
+let hexNumber = [%sedlex.regexp? Plus hex_digit]
+let number = [%sedlex.regexp? Plus digit | ("0x", hexNumber)]
 let character = [%sedlex.regexp? 0x20 .. 0x7E]
 
 let rec token lexbuf =
@@ -35,6 +36,7 @@ let rec token lexbuf =
         | "'"                 -> (char lexbuf)
         | white_space         -> (token lexbuf)
         | ","                 -> (Comma)
+        | hexNumber,('H'|'h') -> (Number (int_of_string ("0x" ^ (let x = Sedlexing.Latin1.lexeme lexbuf in String.sub x 0 ((String.length x) - 1)))))
         | number              -> (
             Number (int_of_string (Sedlexing.Latin1.lexeme lexbuf))
         )
