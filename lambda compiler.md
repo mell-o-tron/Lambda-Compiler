@@ -49,7 +49,7 @@ When compiling $Ln$, one should retrieve the parameter of the function at distan
 
 This is obtained by calling the function `seekle` after having moved the number $n$ to `ax`. 
 
-```
+```nasm
 seekle:
 	; subtract ax from the CURRENT DEPTH
 
@@ -123,7 +123,7 @@ call bx		; make_record puts fun pointer in bx
 
 Where `make_record` is:
 
-```
+```nasm
 %macro 	make_record 0
 		pop_operand ax		; argument
 		pop_operand di		; environment (definition record)
@@ -143,7 +143,7 @@ Where `make_record` is:
 
 #### Case of function applied to function
 Same as above, but instead of using `make_record` use the following:
-```
+```nasm
 %macro 	make_HO_record 0
 		add AR_AREA_POINTER, 8
 		
@@ -189,3 +189,199 @@ Returns a tuple:
 ```
 
 Containing the state of registers after the interrupt call.
+
+### Returning 8-ples
+Returning a tuple involves *creating a tuple at runtime*. This is done by copying a template 8-ple to memory, and substituting the elements of the tuple in the appropriate parameter. The following code is responsible for such an abomination. Note that the part with the `WRANGZ` comment is a jump that is not, currently, correctly handled in the copied version, as it is relative and not absolute. We deemed this known bug acceptable for the presentation, as it only happens when one accesses an out-of-bounds element of the created tuple, hence the program would fail anyway (albeit in a more controlled manner)
+
+```nasm
+
+; template_create_tuple
+
+template_create_tuple:
+
+push ax
+pusha
+
+mov ax, [INT_RESULT]
+mov [templ_param_0], ax
+
+mov ax, [INT_RESULT + 2]
+mov [templ_param_1], ax
+
+mov ax, [INT_RESULT + 4]
+mov [templ_param_2], ax
+
+mov ax, [INT_RESULT + 6]
+mov [templ_param_3], ax
+
+mov ax, [INT_RESULT + 8]
+mov [templ_param_4], ax
+
+mov ax, [INT_RESULT + 10]
+mov [templ_param_5], ax
+
+mov ax, [INT_RESULT + 12]
+mov [templ_param_6], ax
+
+mov ax, [INT_RESULT + 14]
+mov [templ_param_7], ax
+
+
+xor eax, eax
+xor ebx, ebx
+mov ax, fckin_template
+mov bx, [CURRENT_END]
+mov [TEMPLATE_RESULT], bx
+
+
+copy_loop:
+
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
+
+mov cx, [eax]
+mov [ebx], cx
+add ax, 2
+add bx, 2
+
+cmp ax, fckin_end
+jb copy_loop
+
+popa
+mov ax, [TEMPLATE_RESULT]
+push_operand eax
+pop ax
+
+pusha
+mov eax, [CURRENT_END]
+add eax, fckin_end - fckin_template + 2
+mov word [CURRENT_END], ax
+popa
+ret
+
+
+fckin_template:
+
+mov ax, 0
+mov bx, seekle
+call bx
+
+pop_operand ax
+
+cmp ax, 0
+je near templ_jmp_0
+cmp ax, 1
+je near templ_jmp_1
+cmp ax, 2
+je near templ_jmp_2
+cmp ax, 3
+je near templ_jmp_3
+cmp ax, 4
+je near templ_jmp_4
+cmp ax, 5
+je near templ_jmp_5
+cmp ax, 6
+je near templ_jmp_6
+cmp ax, 7
+je near templ_jmp_7
+jmp death 				;;;; WRANGZ
+
+templ_jmp_0:
+db 0x66, 0xbf
+templ_param_0:
+dw 10
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_1:
+db 0x66, 0xbf
+templ_param_1:
+dw 11
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_2:
+db 0x66, 0xbf
+templ_param_2:
+dw 12
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_3:
+db 0x66, 0xbf
+templ_param_3:
+dw 13
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_4:
+
+db 0x66, 0xbf
+templ_param_4:
+dw 14
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+pusha
+mov bx, 10
+mov ax, print_dec
+call ax
+popa
+
+bufferize
+ret
+
+templ_jmp_5:
+db 0x66, 0xbf
+templ_param_5:
+dw 15
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_6:
+db 0x66, 0xbf
+templ_param_6:
+dw 16
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+templ_jmp_7:
+db 0x66, 0xbf
+templ_param_7:
+dw 17
+dw 0
+mov [OPERAND_POINTER], edi
+add OPERAND_POINTER, 2
+
+bufferize
+ret
+
+fckin_end:
+dw 0, 0
+```
