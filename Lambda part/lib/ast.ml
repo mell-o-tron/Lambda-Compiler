@@ -24,7 +24,9 @@ and bexp =
   [@@deriving show]
 and exp =
   | Lambda      of exp
+  | Lambdas     of int * exp
   | Apply       of exp * exp
+  | MultiApply  of exp * exp list
   | HOApply     of exp * exp
   | IfThenElse  of exp * exp * exp
   | Aexp        of aexp

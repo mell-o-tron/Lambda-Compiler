@@ -18,13 +18,14 @@
 %token EOF
 %token Lambda
 %token Lambdas
+%token MultiApply
 %token <int> Number
 %token <char> Character
 %token Plus Minus Times Div
 %token <bool> Boolean
 %token Not And Or
 %token Equals LAngle RAngle Neq Geq Leq
-%token LParens RParens
+%token LParens RParens LSquare RSquare
 %token LIndex GIndex
 %token If Then Else
 %token Apply
@@ -60,9 +61,10 @@ program:
 
 expr:
   | Lambda e = expr                                 {Ast.Lambda(e)}
-  | Lambdas e = expr                                {Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(Ast.Lambda(e))))))))}
+  | Lambdas LParens n = Number RParens e = expr     {Ast.Lambdas(n, e)}
   | LParens e = expr RParens                        {e}
   | Apply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.Apply(e1, e2)}
+  | MultiApply LParens e1 = expr RParens LSquare s = subtuple RSquare      {Ast.MultiApply(e1, s)}
   | HOApply LParens e1 = expr RParens LParens e2 = expr RParens      {Ast.HOApply(e1, e2)}
   | LIndex n = Number                               {Ast.Var(n)}
   | GIndex n = Number                               {Ast.Var(-n)}
@@ -88,7 +90,7 @@ expr:
                                                       }
   | LParens s = subtuple RParens                    {Ast.Lambda (Ast.Switch(s, 0))}
   | LParens RParens                                 {Ast.Lambda (Ast.Die)}
-  
+
 subtuple:
   | e = expr                                        {[e]}
   | e = expr Comma s = subtuple                     {e::s}

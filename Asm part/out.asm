@@ -323,7 +323,11 @@ push_operand CURRENT_RECORD
 make_HO_record
 call bx
 debufferize
-push_operand 65
+push_operand 5
+make_record
+call bx
+debufferize
+push_operand 2
 make_record
 call bx
 debufferize
@@ -418,149 +422,55 @@ bufferize
 ret
 
 fun_7:
-push_operand fun_6_tuple
+push_operand fun_6
 push_operand CURRENT_RECORD
-push_operand 8
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 7
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 6
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 5
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 4
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 3
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 2
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 1
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 0
-make_record
-call bx
-debufferize
-pusha
-call_interrupt branch_1_else
-popa
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 9
-make_record
-call bx
-debufferize
-call_callback
 bufferize
 ret
 
-fun_6_tuple:
-mov ax, 0
-call seekle
-pop_operand ax
-cmp ax, 0
-je branch_11_switch
-cmp ax, 1
-je branch_10_switch
-cmp ax, 2
-je branch_9_switch
-cmp ax, 3
-je branch_8_switch
-cmp ax, 4
-je branch_7_switch
-cmp ax, 5
-je branch_6_switch
-cmp ax, 6
-je branch_5_switch
-cmp ax, 7
-je branch_4_switch
-cmp ax, 8
-je branch_3_switch
-cmp ax, 9
-je branch_2_switch
-jmp death
-branch_11_switch:
-push_operand 16
-bufferize
-ret
-branch_10_switch:
+fun_6:
 mov ax, 1
 call seekle
-bufferize
-ret
-branch_9_switch:
-push_operand 14
-bufferize
-ret
-branch_8_switch:
-push_operand 0
-bufferize
-ret
-branch_7_switch:
-push_operand 0
-bufferize
-ret
-branch_6_switch:
-push_operand 0
-bufferize
-ret
-branch_5_switch:
-push_operand 0
-bufferize
-ret
-branch_4_switch:
-push_operand 0
-bufferize
-ret
-branch_3_switch:
-push_operand 0
-bufferize
-ret
-branch_2_switch:
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jne branch_1_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_2_end_cmp
+branch_1_cmp_fail:
+push_operand 0 ; cmp false
+branch_2_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_3_else
+; then:
+mov ax, 0
+call seekle
+
+jmp branch_4_endif
+branch_3_else:
+; else:
 mov ax, 2
 call seekle
 mov ax, 1
 call seekle
 ;optimized
-mov bx, 1
+mov ax, 1
+neg ax
+;optimized
+mov bx, ax
 pop_operand ax
 add_integers
 make_record
 call bx
 debufferize
-bufferize
-ret
+mov ax, 0
+call seekle
+make_record
+call bx
+debufferize
+
+branch_4_endif:
 bufferize
 ret
 
@@ -846,4 +756,4 @@ NEW_LINE:
 
 start_of_end:
 
-times 18432-($-$$) db 0x00
+times 20480-($-$$) db 0x00

@@ -7,12 +7,15 @@ let character = [%sedlex.regexp? 0x20 .. 0x7E]
 
 let rec token lexbuf =
     match%sedlex lexbuf with
-        | "λ." | "\\lambda."  -> (Lambda)
-        | "\\lambdas."         -> (Lambdas)
+        | "λ."  | "\\lambda."  -> (Lambda)
+        | "λs." | "\\lambdas." -> (Lambdas)
         | "@"                 -> (Apply)
+        | "m@"                -> (MultiApply)
         | "$"                 -> (HOApply)
         | "("                 -> (LParens)
         | ")"                 -> (RParens)
+        | "["                 -> (LSquare)
+        | "]"                 -> (RSquare)
         | "+"                 -> (Plus)
         | "-"                 -> (Minus)
         | "×"  | "*"          -> (Times)

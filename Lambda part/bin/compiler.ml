@@ -17,13 +17,23 @@ let fresh_jmp () =
 (* returns a pair of strings (s1, s2) where s1 is the code of the main expression, and s2 is the code of the generated functions *)
 
 let rec compile (e: exp) (depth:int) = (match e with
+  
+  | Lambdas (n, e1) -> if n = 0 then compile(e1)(depth) else
+                       compile(Lambda(Lambdas(n-1, e1)))(depth)    (*unroll multi-lambda*)
+  
+  | MultiApply (e1, l) -> ( match l with
+      | []    -> compile(e1) (depth)
+      | x::xs -> compile(MultiApply (Apply(e1, x), xs))(depth)
+  )
+  
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
                                                           funname ^":\n"^ (fst c) ^ 
                                                           "bufferize\nret\n\n"
                                                           ^ (snd c))
   )
-
+  
+  
   | Var i -> (
     if i < 0
       then ("pusha\nmov bx, 6969\ncall print_dec\npopa", "")
