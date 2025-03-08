@@ -175,7 +175,13 @@ let ast_of_channel inchn =
   let parser = MenhirLib.Convert.Simplified.traditional2revised LambdaCompiler.Parser.program in
   try (parser lexer) with
   | LambdaCompiler.Parser.Error ->
-    raise (Syntax_error ((fst (Sedlexing.lexing_positions lexbuf)).pos_lnum, (fst (Sedlexing.lexing_positions lexbuf)).pos_cnum, "Syntax error"));;
+    raise
+      (Syntax_error
+         ( (fst (Sedlexing.lexing_positions lexbuf)).pos_lnum,
+           (fst (Sedlexing.lexing_positions lexbuf)).pos_cnum
+           - (fst (Sedlexing.lexing_positions lexbuf)).pos_bol,
+           "Syntax error" ));;
+
 
 let ast = ast_of_channel inchn in
 let compiled = compile ast 0 in
