@@ -36,6 +36,7 @@ let rec token lexbuf =
         | "else"              -> (Else)
         | "Y"                 -> (Ycomb)
         | "INT"               -> (Interrupt)
+        | "💀"|"☠"|"☠️"|"🕱"|"Die"        -> (Die)
         | "'"                 -> (char lexbuf)
         | white_space         -> (token lexbuf)
         | ","                 -> (Comma)

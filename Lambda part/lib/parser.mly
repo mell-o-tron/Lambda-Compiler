@@ -32,6 +32,7 @@
 %token Ycomb
 %token HOApply
 %token Interrupt
+%token Die
 %token Comma
 
 /* Precedence and associativity specification */
@@ -90,6 +91,7 @@ expr:
                                                       }
   | LParens s = subtuple RParens                    {Ast.Lambda (Ast.Switch(s, 0))}
   | LParens RParens                                 {Ast.Lambda (Ast.Die)}
+  | Die                                             {Ast.Die}
 
 subtuple:
   | e = expr                                        {[e]}
