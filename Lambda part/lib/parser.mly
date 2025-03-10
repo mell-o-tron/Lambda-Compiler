@@ -33,7 +33,8 @@
 %token HOApply
 %token Interrupt
 %token Die
-%token Comma
+%token SayHere
+%token Comma Semicolon
 
 /* Precedence and associativity specification */
 %nonassoc   Else
@@ -92,6 +93,7 @@ expr:
   | LParens s = subtuple RParens                    {Ast.Lambda (Ast.Switch(s, 0))}
   | LParens RParens                                 {Ast.Lambda (Ast.Die)}
   | Die                                             {Ast.Die}
+  | SayHere Semicolon e = expr                      {Ast.SayHere (e)}
 
 subtuple:
   | e = expr                                        {[e]}

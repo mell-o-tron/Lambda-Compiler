@@ -47,5 +47,10 @@ print_dec:
     jne .print_loop
 
 .done:
+    
+    mov ah, 0x0E
+    mov al, ' '
+    int 0x10
+
     pop bp
     ret

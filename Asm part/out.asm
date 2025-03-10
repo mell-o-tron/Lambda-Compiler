@@ -49,7 +49,11 @@ push_operand eax
 %endmacro
 
 %macro mul_integers 0
+push edx
+push ecx
 mul bx
+pop ecx
+pop edx
 push_operand eax
 %endmacro
 
@@ -58,8 +62,7 @@ push_operand eax
 push edx
 push ecx
 mov edx, 0
-mov cx, bx
-div cx
+div bx
 pop ecx
 pop edx
 
@@ -82,9 +85,9 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 ;
-; 		pusha
-; 		print_cur_record
-; 		popa
+		pusha
+		print_cur_record
+		popa
 %endmacro
 
 %macro 	make_HO_record 0
@@ -318,16 +321,36 @@ call print_string
 ; GENERATED CODE WILL BE WRITTEN HERE
 push_operand fun_5
 push_operand CURRENT_RECORD
-push_operand fun_9
+push_operand fun_13
 push_operand CURRENT_RECORD
 make_HO_record
 call bx
 debufferize
-push_operand 65
+push_operand 6
 make_record
 call bx
 debufferize
-push_operand 90
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand 0
+make_record
+call bx
+debufferize
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand 1
+make_record
+call bx
+debufferize
+push_operand 3
+make_record
+call bx
+debufferize
+push_operand 3
 make_record
 call bx
 debufferize
@@ -415,6 +438,30 @@ debufferize
 bufferize
 ret
 
+fun_13:
+push_operand fun_12
+push_operand CURRENT_RECORD
+bufferize
+ret
+
+fun_12:
+push_operand fun_11
+push_operand CURRENT_RECORD
+bufferize
+ret
+
+fun_11:
+push_operand fun_10
+push_operand CURRENT_RECORD
+bufferize
+ret
+
+fun_10:
+push_operand fun_9
+push_operand CURRENT_RECORD
+bufferize
+ret
+
 fun_9:
 push_operand fun_8
 push_operand CURRENT_RECORD
@@ -428,162 +475,278 @@ bufferize
 ret
 
 fun_7:
-mov ax, 1
+push_operand fun_6
+push_operand CURRENT_RECORD
+bufferize
+ret
+
+fun_6:
+mov ax, 6
 call seekle
-mov ax, 0
-call seekle
-pop_operand bx
+;optimized
+mov bx, 0
 pop_operand ax
 cmp ax, bx 
-jle branch_1_cmp_fail
+jne branch_1_cmp_fail
 push_operand 1 ; cmp true
 jmp branch_2_end_cmp
 branch_1_cmp_fail:
 push_operand 0 ; cmp false
 branch_2_end_cmp:
-pop_operand ax
-cmp ax, 1 
-jne branch_14_else
-; then:
-push_operand 0
-
-jmp branch_15_endif
-branch_14_else:
-; else:
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 8
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 7
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 6
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 5
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
 push_operand 4
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 3
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 2
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 1
-make_record
-call bx
-debufferize
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 0
-make_record
-call bx
-debufferize
-pusha
-call_interrupt branch_3_else
-popa
-push_operand fun_6_tuple
-push_operand CURRENT_RECORD
-push_operand 9
-make_record
-call bx
-debufferize
-call_callback
-
-branch_15_endif:
-bufferize
-ret
-
-fun_6_tuple:
-mov ax, 0
+mov ax, 5
 call seekle
+pop_operand bx
 pop_operand ax
-cmp ax, 0
-je branch_13_switch
-cmp ax, 1
-je branch_12_switch
-cmp ax, 2
-je branch_11_switch
-cmp ax, 3
-je branch_10_switch
-cmp ax, 4
-je branch_9_switch
-cmp ax, 5
-je branch_8_switch
-cmp ax, 6
-je branch_7_switch
-cmp ax, 7
-je branch_6_switch
-cmp ax, 8
-je branch_5_switch
-cmp ax, 9
-je branch_4_switch
-jmp death
-branch_13_switch:
-push_operand 16
-bufferize
-ret
-branch_12_switch:
-mov ax, 2
+mul_integers
+mov ax, 4
 call seekle
-bufferize
-ret
-branch_11_switch:
-push_operand 14
-bufferize
-ret
-branch_10_switch:
-push_operand 0
-bufferize
-ret
-branch_9_switch:
-push_operand 0
-bufferize
-ret
-branch_8_switch:
-push_operand 0
-bufferize
-ret
-branch_7_switch:
-push_operand 0
-bufferize
-ret
-branch_6_switch:
-push_operand 0
-bufferize
-ret
-branch_5_switch:
-push_operand 0
-bufferize
-ret
-branch_4_switch:
+pop_operand bx
+pop_operand ax
+add_integers
 mov ax, 3
 call seekle
+pop_operand ax
+neg ax
+;optimized
+mov bx, ax
+pop_operand ax
+add_integers
+mov ax, 1
+call seekle
+mov ax, 3
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand bx
+pop_operand ax
+cmp ax, bx 
+jge branch_3_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_4_end_cmp
+branch_3_cmp_fail:
+push_operand 0 ; cmp false
+branch_4_end_cmp:
+pop_operand bx
+pop_operand ax
+and ax, bx
+push_operand eax
+pop_operand ax
+cmp ax, 1 
+jne branch_13_else
+; then:
+mov ax, 1
+call seekle
+
+jmp branch_14_endif
+branch_13_else:
+; else:
+mov ax, 6
+call seekle
+;optimized
+mov bx, 0
+pop_operand ax
+cmp ax, bx 
+jge branch_5_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_6_end_cmp
+branch_5_cmp_fail:
+push_operand 0 ; cmp false
+branch_6_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_11_else
+; then:
+jmp death
+
+jmp branch_12_endif
+branch_11_else:
+; else:
+push_operand 4
+mov ax, 5
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+mov ax, 4
+call seekle
+pop_operand bx
+pop_operand ax
+add_integers
+mov ax, 3
+call seekle
+pop_operand ax
+neg ax
+;optimized
+mov bx, ax
+pop_operand ax
+add_integers
+mov ax, 1
+call seekle
+mov ax, 3
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand bx
+pop_operand ax
+cmp ax, bx 
+jge branch_7_cmp_fail
+push_operand 1 ; cmp true
+jmp branch_8_end_cmp
+branch_7_cmp_fail:
+push_operand 0 ; cmp false
+branch_8_end_cmp:
+pop_operand ax
+cmp ax, 1 
+jne branch_9_else
+; then:
+mov ax, 7
+call seekle
+mov ax, 6
+call seekle
+;optimized
+mov ax, 1
+neg ax
+;optimized
+mov bx, ax
+pop_operand ax
+add_integers
+make_record
+call bx
+debufferize
+push_operand 10
+mov ax, 5
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+make_record
+call bx
+debufferize
+push_operand 10
+mov ax, 4
+call seekle
+mov ax, 1
+call seekle
+mov ax, 3
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand ax
+neg ax
+;optimized
+mov bx, ax
+pop_operand ax
+add_integers
+pop_operand bx
+pop_operand ax
+mul_integers
+make_record
+call bx
+debufferize
+mov ax, 3
+call seekle
+make_record
+call bx
+debufferize
+mov ax, 2
+call seekle
+make_record
+call bx
+debufferize
+push_operand 10
+push_operand 3
+mov ax, 5
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+mov ax, 4
+call seekle
+pop_operand bx
+pop_operand ax
+add_integers
+pop_operand bx
+pop_operand ax
+mul_integers
+mov ax, 3
+call seekle
+pop_operand bx
+pop_operand ax
+div_integers
+;optimized
+mov ax, 10
+neg ax
+push_operand eax
+mov ax, 1
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand bx
+pop_operand ax
+add_integers
+make_record
+call bx
+debufferize
+mov ax, 0
+call seekle
+make_record
+call bx
+debufferize
+
+jmp branch_10_endif
+branch_9_else:
+; else:
+mov ax, 7
+call seekle
+mov ax, 6
+call seekle
+make_record
+call bx
+debufferize
+mov ax, 5
+call seekle
+mov ax, 2
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+make_record
+call bx
+debufferize
+push_operand 2
+mov ax, 5
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+mov ax, 4
+call seekle
+pop_operand bx
+pop_operand ax
+add_integers
+mov ax, 0
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+make_record
+call bx
+debufferize
+mov ax, 3
+call seekle
+mov ax, 0
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+make_record
+call bx
+debufferize
 mov ax, 2
 call seekle
 ;optimized
@@ -593,13 +756,59 @@ add_integers
 make_record
 call bx
 debufferize
-mov ax, 1
+mov ax, 5
 call seekle
+push_operand 7
+mov ax, 2
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+;optimized
+mov bx, 2
+pop_operand ax
+add_integers
+pop_operand bx
+pop_operand ax
+mul_integers
+mov ax, 4
+call seekle
+mov ax, 0
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand bx
+pop_operand ax
+add_integers
+mov ax, 3
+call seekle
+mov ax, 0
+call seekle
+pop_operand bx
+pop_operand ax
+mul_integers
+pop_operand bx
+pop_operand ax
+div_integers
 make_record
 call bx
 debufferize
-bufferize
-ret
+mov ax, 0
+call seekle
+;optimized
+mov bx, 2
+pop_operand ax
+add_integers
+make_record
+call bx
+debufferize
+
+branch_10_endif:
+
+branch_12_endif:
+
+branch_14_endif:
 bufferize
 ret
 
@@ -862,7 +1071,7 @@ HERE_STRING:
 	db "Here!", 0x0A, 0x0D, 0x00
 
 END_STRING:
-	db "End.", 0x0A, 0x0D, 0x00
+	db " End.", 0x0A, 0x0D, 0x00
 
 DEAD_STRING:
 	db "Ded.", 0x0A, 0x0D, 0x00

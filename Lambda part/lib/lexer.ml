@@ -37,9 +37,11 @@ let rec token lexbuf =
         | "Y"                 -> (Ycomb)
         | "INT"               -> (Interrupt)
         | "💀"|"☠"|"☠️"|"🕱"|"Die"        -> (Die)
+        | "here" | "🙋"       -> (SayHere)
         | "'"                 -> (char lexbuf)
         | white_space         -> (token lexbuf)
         | ","                 -> (Comma)
+        | ";"                 -> (Semicolon)
         | hexNumber,('H'|'h') -> (Number (int_of_string ("0x" ^ (let x = Sedlexing.Latin1.lexeme lexbuf in String.sub x 0 ((String.length x) - 1)))))
         | number              -> (
             Number (int_of_string (Sedlexing.Latin1.lexeme lexbuf))

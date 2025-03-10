@@ -83,7 +83,8 @@ let rec compile (e: exp) (depth:int) = (match e with
   )
           
   | Die -> ("jmp death\n", "")
-  
+
+  | SayHere (e) -> let c1 = compile e depth in ("say_here\n" ^ (fst c1), (snd c1))
   )
 
 

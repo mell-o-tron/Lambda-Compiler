@@ -7,23 +7,38 @@ def leibniz_pi():
     while True:
         if 4*q+r-t < n*t:
             print(n)
-            q,r,t,k,n,l = (10*q,10*(r-n*t),t,k,(10*(3*q+r))//t-10*n,l)
+            q,r,t,k,n,l = (10*L5,10*(r-n*t),t,k,(10*(3*q+r))//t-10*n,l)
         else:
             q,r,t,k,n,l = (q*k,(2*q+r)*l,t*l,k+1,(q*(7*k+2)+r*l)//(t*l),l+2)
 
 
 # to labmdize:
-def leibniz_pi_rec(iters, q, r, t, k, n, l):
-    if iters == 0:
-        return
+def leibniz_pi_rec(L6, L5, L4, L3, L2, L1, L0):
+    if L6 == 0 and 4 * L5 + L4 - L3 < L1 * L3:
+        return L1
     
-    print((10*(3*q+r))//t-10*n)
-    return
-    if 4*q+r-t < n*t:
-        print(n, end=" ")
-        leibniz_pi_rec(iters - 1, 10*q,10*(r-n*t),t,k,(10*(3*q+r))//t-10*n,l)
+    
+    if 4 * L5 + L4 - L3 < L1 * L3:
+        return leibniz_pi_rec(
+            L6 - 1,
+            10 * L5,
+            10 * (L4 - L1 * L3),
+            L3,
+            L2,
+            (10 * (3 * L5 + L4)) // L3 - 10 * L1,
+            L0
+        )
     else:
-        leibniz_pi_rec(iters, q*k,(2*q+r)*l,t*l,k+1,(q*(7*k+2)+r*l)//(t*l),l+2)
+        return leibniz_pi_rec(
+            L6,
+            L5 * L2,
+            (2 * L5 + L4) * L0,
+            L3 * L0,
+            L2 + 1,
+            (L5 * (7 * L2 + 2) + L4 * L0) // (L3 * L0),
+            L0 + 2
+        )
+
 
 # '''
 # m@ ($ (Y) (\lambdas. () 
@@ -32,5 +47,6 @@ def leibniz_pi_rec(iters, q, r, t, k, n, l):
 # INT (16, L2, 14, 0,0,0,0,0,0, m@(L3)[L2 + 1, L1]))) [65, 90]
 # '''
 # λs. 
-leibniz_pi_rec(1, 1,0,1,1,3,3)
-print()
+for i in range(10):
+    print(leibniz_pi_rec(i, 1,0,1,1,3,3))
+
