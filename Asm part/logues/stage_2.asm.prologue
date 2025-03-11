@@ -51,7 +51,8 @@ push_operand eax
 %macro mul_integers 0
 push edx
 push ecx
-mul bx
+cwd
+imul bx
 pop ecx
 pop edx
 push_operand eax
@@ -62,7 +63,8 @@ push_operand eax
 push edx
 push ecx
 mov edx, 0
-div bx
+cwd
+idiv bx
 pop ecx
 pop edx
 
@@ -85,9 +87,9 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 ;
-		pusha
-		print_cur_record
-		popa
+		;pusha
+		;print_cur_record
+		;popa
 %endmacro
 
 %macro 	make_HO_record 0

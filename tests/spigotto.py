@@ -19,6 +19,8 @@ def leibniz_pi_rec(L6, L5, L4, L3, L2, L1, L0):
     
     
     if 4 * L5 + L4 - L3 < L1 * L3:
+        # print(chr((10 * (3 * L5 + L4)) // L3 - 10 * L1  + 48), end='')
+        print(L5)
         return leibniz_pi_rec(
             L6 - 1,
             10 * L5,
@@ -47,6 +49,6 @@ def leibniz_pi_rec(L6, L5, L4, L3, L2, L1, L0):
 # INT (16, L2, 14, 0,0,0,0,0,0, m@(L3)[L2 + 1, L1]))) [65, 90]
 # '''
 # λs. 
-for i in range(10):
-    print(leibniz_pi_rec(i, 1,0,1,1,3,3))
+# for i in range(10):
+leibniz_pi_rec(200, 1,0,1,1,3,3)
 
