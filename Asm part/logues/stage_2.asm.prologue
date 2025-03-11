@@ -326,6 +326,11 @@ call bx
 debufferize
 %endmacro
 
+%macro create_bigint 0
+	call template_create_bigint
+	push_operand CURRENT_RECORD
+%endmacro
+
 	cli
 	mov ax, 0x00
 	mov ds, ax

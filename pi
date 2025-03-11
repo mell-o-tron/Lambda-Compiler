@@ -1,8 +1,6 @@
-m@ ($ (Y) (
-    λs. (3) (
-        if L1 = 0 then 
-            L0 
-        else 
-            m@ (L2) [L1 + (-1), L0]
-    ))) 
-[5,2]
+\lambda.
+    if (L0 = 0) then 1000 else
+    if (L0 = 1) then 2000 else
+    if (L0 = 2) then 3000 else
+    if (L0 = 3) then 4000 else Die
+

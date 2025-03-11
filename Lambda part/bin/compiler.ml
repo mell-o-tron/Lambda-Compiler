@@ -95,7 +95,7 @@ and compile_bigexp (e) (depth) = match e with
     | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
       (fst c1 ^ fst c2 ^ 
       
-      "add_bigintegers\n", snd c1 ^ snd c2)
+      "add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
   )
   
 and pushall_bigint (e) (depth) = 
