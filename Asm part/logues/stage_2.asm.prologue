@@ -71,6 +71,34 @@ pop edx
 push_operand eax
 %endmacro
 
+
+%macro add_bigintegers 0
+mov word ax, [OPERAND_POINTER - 10]   ; LL 1
+mov word bx, [OPERAND_POINTER - 2]    ; LL 2
+add ax, bx
+mov word [OPERAND_POINTER - 10], ax	  ; result to LL1
+
+mov word ax, [OPERAND_POINTER - 12]   ; LH 1
+mov word bx, [OPERAND_POINTER - 4]    ; LH 2
+adc ax, bx
+mov word [OPERAND_POINTER - 12], ax	  ; result to LH2
+
+mov word ax, [OPERAND_POINTER - 14]   ; HL 1
+mov word bx, [OPERAND_POINTER - 6]    ; HL 2
+adc ax, bx
+mov word [OPERAND_POINTER - 14], ax	  ; result to HL2
+
+mov word ax, [OPERAND_POINTER - 16]   ; HH 1
+mov word bx, [OPERAND_POINTER - 8]    ; HH 2
+adc ax, bx
+mov word [OPERAND_POINTER - 16], ax	  ; result to HH2
+
+mov eax, OPERAND_POINTER
+sub eax, 8
+mov OPERAND_POINTER, eax
+%endmacro
+
+
 %macro 	make_record 0
 
 		add AR_AREA_POINTER, 8

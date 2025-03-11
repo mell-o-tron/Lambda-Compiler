@@ -35,13 +35,14 @@
 %token Die
 %token SayHere
 %token Comma Semicolon
+%token BigInt BigPlus
 
 /* Precedence and associativity specification */
 %nonassoc   Else
 %left       And Or
 %left       Equals LAngle RAngle Leq Neq Geq
 %right      Not Minus
-%left       Plus
+%left       Plus BigPlus
 %left       Times
 %left       Div
 %right      Lambda Lambdas
@@ -53,6 +54,8 @@
 %type <Ast.exp> expr
 %type <Ast.aexp> aexpr 
 %type <Ast.bexp> bexpr
+%type <Ast.bigexp> bigexpr
+
 
 %%
 
@@ -72,6 +75,7 @@ expr:
   | GIndex n = Number                               {Ast.Var(-n)}
   | a = aexpr                                       {Ast.Aexp(a)}
   | b = bexpr                                       {Ast.Bexp(b)}
+  | b = bigexpr                                     {Ast.Bigexp(b)}
   | If e1 = expr Then e2 = expr Else e3 = expr      {Ast.IfThenElse(e1, e2, e3)}
   | Interrupt e = expr                              {Ast.Interrupt (e)}
   | Ycomb                                           {(Ast.Lambda
@@ -95,6 +99,10 @@ expr:
   | Die                                             {Ast.Die}
   | SayHere Semicolon e = expr                      {Ast.SayHere (e)}
 
+num_maybeneg:
+  | n = Number                                      {n}
+  | Minus n = Number                                {-n}
+  
 subtuple:
   | e = expr                                        {[e]}
   | e = expr Comma s = subtuple                     {e::s}
@@ -105,6 +113,10 @@ aexpr:
   | e1 = expr op = abinop e2 = expr                 {Ast.ABinop(op, e1, e2)}
   | op = aunop e = expr                             {Ast.AUnop(op, e)}
 
+bigexpr:
+  | BigInt LParens n = num_maybeneg RParens               {Ast.BigInt(n)}
+  | e1 = expr op = bigbinop e2 = expr               {Ast.BigBinop(op, e1, e2)}
+  
 %inline aunop:
   | Minus                                           {Ast.Neg}
 
@@ -112,6 +124,10 @@ aexpr:
   | Plus                                            {Ast.Plus}
   | Times                                           {Ast.Times}
   | Div                                             {Ast.Div}
+  
+
+%inline bigbinop:
+  | BigPlus                                         {Ast.BigPlus}
 
 bexpr:
   | b = Boolean                                     {Ast.BoolConst(b)}

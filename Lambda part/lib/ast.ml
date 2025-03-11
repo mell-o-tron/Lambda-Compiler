@@ -3,6 +3,9 @@ type aunop = Neg
 type abinop = Plus | Times | Div
 [@@deriving show]
 
+type bigbinop = BigPlus
+[@@deriving show]
+
 type bunop = Not
 [@@deriving show]
 type bbinop = And | Or
@@ -22,6 +25,10 @@ and bexp =
   | Compare     of comparator * exp * exp
   | BoolConst   of bool
   [@@deriving show]
+and bigexp = 
+  | BigInt      of int    (*Maybe use strings or ocaml bigints to initialize bigger ints*)
+  | BigBinop    of bigbinop * exp * exp
+  [@@deriving show]
 and exp =
   | Lambda      of exp
   | Lambdas     of int * exp
@@ -31,6 +38,7 @@ and exp =
   | IfThenElse  of exp * exp * exp
   | Aexp        of aexp
   | Bexp        of bexp
+  | Bigexp      of bigexp
   | Var         of int
   | Interrupt   of exp  (* function representing tuple: 1 for number of interrupt, 8 for registers, final is callback *)
   | Switch      of exp list * int

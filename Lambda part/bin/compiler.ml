@@ -85,8 +85,66 @@ let rec compile (e: exp) (depth:int) = (match e with
   | Die -> ("jmp death\n", "")
 
   | SayHere (e) -> let c1 = compile e depth in ("say_here\n" ^ (fst c1), (snd c1))
+  
+  | Bigexp(e) -> compile_bigexp (e) (depth)
   )
 
+and compile_bigexp (e) (depth) = match e with
+  | BigInt(i) -> compile_bigint(i)(depth)
+  | BigBinop (op, e1, e2) -> ( match op with
+    | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
+      (fst c1 ^ fst c2 ^ 
+      
+      "add_bigintegers\n", snd c1 ^ snd c2)
+  )
+  
+and pushall_bigint (e) (depth) = 
+  let cll = compile (Apply (e, (Aexp (IntConst 0)))) (depth) in
+  let clh = compile (Apply (e, (Aexp (IntConst 1)))) (depth) in
+  let chl = compile (Apply (e, (Aexp (IntConst 2)))) (depth) in
+  let chh = compile (Apply (e, (Aexp (IntConst 3)))) (depth) in
+  
+  (fst chh ^ fst chl ^ fst clh ^ fst cll, snd chh ^ snd chl ^ snd clh ^ snd cll)
+  
+
+
+
+
+(* For now can only initialize bigint with 64-bit int -- actually 63 because ocaml*)
+and compile_bigint (i : int)(depth : int)= 
+  let ll = i land 0xFFFF in
+  let lh = (i lsr 16) land 0xFFFF in
+  let hl = (i lsr 32) land 0xFFFF in
+  let hh = (i lsr 48) land 0xFFFF lor 
+    (if i < 0 then  0b1000000000000000 else   (* to account for ocaml's weirdness *)
+                    0) in
+  compile ((Lambda                         
+   (IfThenElse (
+      (Bexp
+         (Compare (Equals, (Var 0), (Aexp (IntConst 0))))),
+      (Aexp (IntConst ll)),
+      (IfThenElse (
+         (Bexp
+            (Compare (Equals, (Var 0),
+               (Aexp (IntConst 1))))),
+         (Aexp (IntConst lh)),
+         (IfThenElse (
+            (Bexp
+               (Compare (Equals, (Var 0),
+                  (Aexp (IntConst 2))))),
+            (Aexp (IntConst hl)),
+            (IfThenElse (
+               (Bexp
+                  (Compare (Equals, (Var 0),
+                     (Aexp (IntConst 3))))),
+               (Aexp (IntConst hh)), Die))
+            ))
+         ))
+      ))))(depth + 1)
+  
+  
+  
+  
 
 and compile_switch_params (lst : exp list) = (match lst with
   | []            ->  (("",""), [])
