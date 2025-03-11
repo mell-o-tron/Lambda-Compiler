@@ -35,13 +35,13 @@
 %token Die
 %token SayHere
 %token Comma Semicolon
-%token BigInt BigPlus
+%token BigInt BigPlus BigMinus
 
 /* Precedence and associativity specification */
 %nonassoc   Else
 %left       And Or
 %left       Equals LAngle RAngle Leq Neq Geq
-%right      Not Minus
+%right      Not Minus BigMinus
 %left       Plus BigPlus
 %left       Times
 %left       Div
@@ -114,8 +114,9 @@ aexpr:
   | op = aunop e = expr                             {Ast.AUnop(op, e)}
 
 bigexpr:
-  | BigInt LParens n = num_maybeneg RParens               {Ast.BigInt(n)}
+  | BigInt LParens n = num_maybeneg RParens         {Ast.BigInt(n)}
   | e1 = expr op = bigbinop e2 = expr               {Ast.BigBinop(op, e1, e2)}
+  | op = bigunop e = expr                           {Ast.BigUnop(op, e)}
   
 %inline aunop:
   | Minus                                           {Ast.Neg}
@@ -128,6 +129,9 @@ bigexpr:
 
 %inline bigbinop:
   | BigPlus                                         {Ast.BigPlus}
+
+%inline bigunop:
+  | BigMinus                                        {Ast.BigNeg}
 
 bexpr:
   | b = Boolean                                     {Ast.BoolConst(b)}

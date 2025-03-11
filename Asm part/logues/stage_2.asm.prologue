@@ -98,7 +98,39 @@ sub eax, 8
 mov OPERAND_POINTER, eax
 %endmacro
 
+%macro negate_bigint 0
 
+mov word ax, [OPERAND_POINTER - 2]    ; LL
+not ax
+mov word [OPERAND_POINTER - 2], ax	  ; result to LL
+
+mov word ax, [OPERAND_POINTER - 4]    ; LH
+not ax
+mov word [OPERAND_POINTER - 4], ax	  ; result to LH
+
+mov word ax, [OPERAND_POINTER - 6]    ; HL
+not ax
+mov word [OPERAND_POINTER - 6], ax	  ; result to HL
+
+mov word ax, [OPERAND_POINTER - 8]    ; HH
+not ax
+mov word [OPERAND_POINTER - 8], ax	  ; result to HH
+
+mov eax, 0
+push_operand eax
+
+mov eax, 0
+push_operand eax
+
+mov eax, 0
+push_operand eax
+
+mov eax, 1
+push_operand eax
+
+add_bigintegers
+
+%endmacro
 %macro 	make_record 0
 
 		add AR_AREA_POINTER, 8

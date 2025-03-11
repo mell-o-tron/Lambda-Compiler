@@ -21,6 +21,7 @@ let rec token lexbuf =
         | "×"  | "*"          -> (Times)
         | "/"                 -> (Div)
         | "b+"                -> (BigPlus)
+        | "b-"                -> (BigMinus)
         | "¬"  | "!"          -> (Not)
         | "∧"  | "&"          -> (And)
         | "∨"  | "|"          -> (Or)

@@ -6,6 +6,9 @@ type abinop = Plus | Times | Div
 type bigbinop = BigPlus
 [@@deriving show]
 
+type bigunop = BigNeg
+[@@deriving show]
+
 type bunop = Not
 [@@deriving show]
 type bbinop = And | Or
@@ -28,6 +31,7 @@ and bexp =
 and bigexp = 
   | BigInt      of int    (*Maybe use strings or ocaml bigints to initialize bigger ints*)
   | BigBinop    of bigbinop * exp * exp
+  | BigUnop     of bigunop * exp
   [@@deriving show]
 and exp =
   | Lambda      of exp

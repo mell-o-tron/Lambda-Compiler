@@ -97,6 +97,12 @@ and compile_bigexp (e) (depth) = match e with
       
       "add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
   )
+  | BigUnop (op, e) -> ( match op with
+    | BigNeg -> let c = (pushall_bigint e depth) in
+      (fst c ^
+
+      "negate_bigint\ncreate_bigint\n", snd c)
+    )
   
 and pushall_bigint (e) (depth) = 
   let cll = compile (Apply (e, (Aexp (IntConst 0)))) (depth) in
