@@ -43,6 +43,56 @@
 		mov %1, [OPERAND_POINTER]
 %endmacro
 
+%macro swizzle 0
+		; 1 2 3 -> 3 1 2
+		push eax
+		push ebx
+		
+		; modo A, che non funziona
+		; mov word ax, [OPERAND_POINTER + 2]
+		; mov word bx, [OPERAND_POINTER + 4]
+		; mov word [OPERAND_POINTER + 2], bx
+		; mov word bx, [OPERAND_POINTER + 6]
+		; mov word [OPERAND_POINTER + 4], bx
+		; mov word [OPERAND_POINTER + 2], ax
+
+		; modo B
+		
+		pop_operand eax	   ; 1 2
+		pop_operand ebx    ; 1
+		push ebx
+		pop_operand ebx    ; -
+ 
+		push_operand eax   ; 3
+		push_operand ebx   ; 3 1
+		pop ebx
+		push_operand ebx   ; 3 1 2
+
+		; Tra A e B, il modo migliore è B <- ChatGPT, la nostra 8-ball
+		; il motivo per cui b è migliore è che non c'è bisogno di fare movimenti di memoria
+		; e quindi è più veloce <- ChatGPT, la nostra 8-ball, va be' questo è falso, ma è più facile da leggere
+		
+		pop ebx
+		pop eax
+%endmacro
+
+%macro dup_operand 0
+		push eax
+		push ebx
+
+		pop_operand eax
+		pop_operand ebx
+		
+		push_operand ebx
+		push_operand eax
+		
+		push_operand ebx
+		push_operand eax
+
+		pop ebx
+		pop eax
+%endmacro
+
 %macro add_integers 0
 add ax, bx
 push_operand eax
@@ -71,6 +121,42 @@ pop edx
 push_operand eax
 %endmacro
 
+%macro push_all_biginteger 0
+
+push ebx
+; assume the biginteger lambda is on top of stack
+
+dup_operand
+push_operand 3
+make_record
+call bx
+debufferize
+
+swizzle
+
+dup_operand
+push_operand 2
+make_record
+call bx
+debufferize
+
+swizzle
+
+dup_operand
+push_operand 1
+make_record
+call bx
+debufferize
+
+swizzle
+
+push_operand 0
+make_record
+call bx
+debufferize
+
+pop ebx
+%endmacro
 
 %macro add_bigintegers 0
 mov word ax, [OPERAND_POINTER - 10]   ; LL 1
@@ -131,6 +217,7 @@ push_operand eax
 add_bigintegers
 
 %endmacro
+
 %macro 	make_record 0
 
 		add AR_AREA_POINTER, 8

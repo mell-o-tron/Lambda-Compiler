@@ -144,7 +144,7 @@ je near templ_jmp_7
 jmp death 				;;;; WRANGZ
 
 templ_jmp_0:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_0:
 dw 10
 dw 0
@@ -155,7 +155,7 @@ bufferize
 ret
 
 templ_jmp_1:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_1:
 dw 11
 dw 0
@@ -166,7 +166,7 @@ bufferize
 ret
 
 templ_jmp_2:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_2:
 dw 12
 dw 0
@@ -177,7 +177,7 @@ bufferize
 ret
 
 templ_jmp_3:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_3:
 dw 13
 dw 0
@@ -189,7 +189,7 @@ ret
 
 templ_jmp_4:
 
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_4:
 dw 14
 dw 0
@@ -205,7 +205,7 @@ bufferize
 ret
 
 templ_jmp_5:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_5:
 dw 15
 dw 0
@@ -216,7 +216,7 @@ bufferize
 ret
 
 templ_jmp_6:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_6:
 dw 16
 dw 0
@@ -227,7 +227,7 @@ bufferize
 ret
 
 templ_jmp_7:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 templ_param_7:
 dw 17
 dw 0
@@ -250,14 +250,34 @@ pusha
 mov ax, [OPERAND_POINTER - 2]   ; LL
 mov [bigint_templ_param_0], ax
 
+pusha
+mov bx, ax
+call print_dec
+popa
+
 mov ax, [OPERAND_POINTER - 4]   ; LH
 mov [bigint_templ_param_1], ax
+
+pusha
+mov bx, ax
+call print_dec
+popa
 
 mov ax, [OPERAND_POINTER - 6]   ; HL
 mov [bigint_templ_param_2], ax
 
+pusha
+mov bx, ax
+call print_dec
+popa
+
 mov ax, [OPERAND_POINTER - 8]   ; HH
 mov [bigint_templ_param_3], ax
+
+pusha
+mov bx, ax
+call print_dec
+popa
 
 mov eax, OPERAND_POINTER
 sub eax, 8
@@ -318,7 +338,7 @@ je near bigint_templ_jmp_3
 jmp death 				;;;; WRANGZ
 
 bigint_templ_jmp_0:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 bigint_templ_param_0:
 dw 10
 dw 0
@@ -329,7 +349,7 @@ bufferize
 ret
 
 bigint_templ_jmp_1:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 bigint_templ_param_1:
 dw 11
 dw 0
@@ -340,7 +360,7 @@ bufferize
 ret
 
 bigint_templ_jmp_2:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 bigint_templ_param_2:
 dw 12
 dw 0
@@ -351,7 +371,7 @@ bufferize
 ret
 
 bigint_templ_jmp_3:
-db 0x66, 0xbf
+db 0x66, 0xbf      ; mov edi, -
 bigint_templ_param_3:
 dw 13
 dw 0

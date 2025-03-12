@@ -7,14 +7,34 @@ pusha
 mov ax, [OPERAND_POINTER - 2]   ; LL
 mov [bigint_templ_param_0], ax
 
+pusha
+mov bx, ax
+call print_dec
+popa
+
 mov ax, [OPERAND_POINTER - 4]   ; LH
 mov [bigint_templ_param_1], ax
+
+pusha
+mov bx, ax
+call print_dec
+popa
 
 mov ax, [OPERAND_POINTER - 6]   ; HL
 mov [bigint_templ_param_2], ax
 
+pusha
+mov bx, ax
+call print_dec
+popa
+
 mov ax, [OPERAND_POINTER - 8]   ; HH
 mov [bigint_templ_param_3], ax
+
+pusha
+mov bx, ax
+call print_dec
+popa
 
 mov eax, OPERAND_POINTER
 sub eax, 8

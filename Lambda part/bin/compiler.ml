@@ -29,7 +29,7 @@ let rec compile (e: exp) (depth:int) = (match e with
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
                                                           funname ^":\n"^ (fst c) ^ 
-                                                          "bufferize\nret\n\n"
+                                                          "bufferize\nret\n;end_" ^ funname ^"\n\n"
                                                           ^ (snd c))
   )
   
@@ -104,18 +104,26 @@ and compile_bigexp (e) (depth) = match e with
       "negate_bigint\ncreate_bigint\n", snd c)
     )
   
-and pushall_bigint (e) (depth) = 
-  let cll = compile (Apply (e, (Aexp (IntConst 0)))) (depth) in
-  let clh = compile (Apply (e, (Aexp (IntConst 1)))) (depth) in
-  let chl = compile (Apply (e, (Aexp (IntConst 2)))) (depth) in
-  let chh = compile (Apply (e, (Aexp (IntConst 3)))) (depth) in
-  
-  (fst chh ^ fst chl ^ fst clh ^ fst cll, snd chh ^ snd chl ^ snd clh ^ snd cll)
+and pushall_bigint (e) (depth) =
+  let c = compile e depth in
+  (fst c ^ "push_all_biginteger\n", snd c)
   
 
 
 
 
+(* For now can only initialize bigint with 64-bit int -- actually 63 because ocaml*)
+(* and compile_bigint (i : int)(_depth : int)= 
+let ll = i land 0xFFFF in
+let lh = (i lsr 16) land 0xFFFF in
+let hl = (i lsr 32) land 0xFFFF in
+let hh = (i lsr 48) land 0xFFFF lor 
+  (if i < 0 then  0b1000000000000000 else   (* to account for ocaml's weirdness *)
+                  0) in
+("; making bigint\nmov eax, "   ^ Int.to_string hh ^ "\npush_operand eax\n" ^
+ "mov eax, "   ^ Int.to_string hl ^ "\npush_operand eax\n" ^
+ "mov eax, "   ^ Int.to_string lh ^ "\npush_operand eax\n" ^
+ "mov eax, "   ^ Int.to_string ll ^ "\npush_operand eax\ncreate_bigint\n", "") *)
 (* For now can only initialize bigint with 64-bit int -- actually 63 because ocaml*)
 and compile_bigint (i : int)(depth : int)= 
   let ll = i land 0xFFFF in
