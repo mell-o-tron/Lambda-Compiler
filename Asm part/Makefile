@@ -2,7 +2,7 @@
 
 all:
 	cat "./logues/stage_2.asm.prologue" "../Lambda part/build/y.asm.program" "./logues/stage_2.asm.midlogue" "../Lambda part/build/y.asm.functions" "./logues/stage_2.asm.epilogue" > stage_2.asm
-	python ./post_processor/fun_dedup.py stage_2.asm
+	python3 ./post_processor/fun_dedup.py stage_2.asm
 	./post_processor/post_proc.sh stage_2.asm
 	mkdir -p ./bins
 	nasm -o "./bins/1.bin" first_stage.asm

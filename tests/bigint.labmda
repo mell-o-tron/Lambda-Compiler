@@ -1,1 +1,4 @@
-bi(4) bleq bi(3)
+if bi(40000000) b< bi(40000000) then
+    1+1
+else -2
+

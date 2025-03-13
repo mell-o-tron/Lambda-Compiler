@@ -129,6 +129,11 @@ cmp_bigintegers:
 	jne cmp_bigintegers_end
 
 	cmp_bigintegers_end:
+
+	pushf
+	sub OPERAND_POINTER, 16
+	popf
+
 	ret
 ;end 
 
