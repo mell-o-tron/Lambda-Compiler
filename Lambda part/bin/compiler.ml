@@ -93,9 +93,11 @@ and compile_bigexp (e) (depth) = match e with
   | BigInt(i) -> compile_bigint(i)(depth)
   | BigBinop (op, e1, e2) -> ( match op with
     | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
-      (fst c1 ^ fst c2 ^ 
-      
+    (fst c1 ^ fst c2 ^ 
       "call add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
+    | BigDiv -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
+    (fst c1 ^ fst c2 ^ 
+      "call divide_bigint\ncreate_bigint\n", snd c1 ^ snd c2)  
 
     | _ -> failwith("this bigbinop is not implemented")
   )
@@ -119,7 +121,7 @@ and compile_bigexp (e) (depth) = match e with
               let c2 = (pushall_bigint e2 depth) in
               let l1 = fresh_jmp() ^ "_big_cmp_fail" in
               let l2 = fresh_jmp() ^ "_end_big_cmp" in
-              ( fst c1 ^ fst c2 ^ "call cmp_bigintegers \n" ^ op ^ " " ^ l1 ^ "\npush_operand 1 ; bigcmp true\njmp " ^ l2 ^ "\n"^ l1 ^":\npush_operand 0 ; bigcmp false\n" ^ l2 ^ ":\n",
+              ( fst c1 ^ fst c2 ^ "call cmp_bigintegers\n" ^ op ^ " " ^ l1 ^ "\npush_operand 1 ; bigcmp true\njmp " ^ l2 ^ "\n"^ l1 ^":\npush_operand 0 ; bigcmp false\n" ^ l2 ^ ":\n",
                 snd c1 ^ snd c2 )
   
 and pushall_bigint (e) (depth) =

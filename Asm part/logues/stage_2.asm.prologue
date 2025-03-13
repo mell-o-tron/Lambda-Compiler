@@ -373,47 +373,47 @@ push_operand eax
 %endmacro
 
 %macro call_interrupt 1
-pop_operand ax
-shl ax, 8
-or ax, 0xcd
-mov [should_call_here_%1], ax
+	pop_operand ax
+	shl ax, 8
+	or ax, 0xcd
+	mov [should_call_here_%1], ax
 
-pop_operand al
-pop_operand ah
-pop_operand bl
-pop_operand bh
-pop_operand cl
-pop_operand ch
-pop_operand dl
-pop_operand dh
+	pop_operand al
+	pop_operand ah
+	pop_operand bl
+	pop_operand bh
+	pop_operand cl
+	pop_operand ch
+	pop_operand dl
+	pop_operand dh
 
-should_call_here_%1:
-dw 0
+	should_call_here_%1:
+	dw 0
 
-mov [INT_RESULT], al
-mov [INT_RESULT + 2], ah
-mov [INT_RESULT + 4], bl
-mov [INT_RESULT + 6], bh
-mov [INT_RESULT + 8], cl
-mov [INT_RESULT + 10], ch
-mov [INT_RESULT + 12], dl
-mov [INT_RESULT + 14], dh
+	mov [INT_RESULT], al
+	mov [INT_RESULT + 2], ah
+	mov [INT_RESULT + 4], bl
+	mov [INT_RESULT + 6], bh
+	mov [INT_RESULT + 8], cl
+	mov [INT_RESULT + 10], ch
+	mov [INT_RESULT + 12], dl
+	mov [INT_RESULT + 14], dh
 %endmacro
 
 
 %macro call_callback 0
-call template_create_tuple
-push_operand CURRENT_RECORD
+	call template_create_tuple
+	push_operand CURRENT_RECORD
 
-make_funky_record
+	make_funky_record
 
-;
-; pusha
-; print_cur_record
-; popa
+	;
+	; pusha
+	; print_cur_record
+	; popa
 
-call bx
-debufferize
+	call bx
+	debufferize
 %endmacro
 
 %macro create_bigint 0
@@ -421,20 +421,31 @@ debufferize
 	push_operand CURRENT_RECORD
 %endmacro
 
-	cli
-	mov ax, 0x00
-	mov ds, ax
-	mov es, ax
-	mov ss, ax
-	mov sp, 0x2D55		; stack pointer
-	sti
+cli
+mov ax, 0x00
+mov ds, ax
+mov es, ax
+mov ss, ax
+mov sp, 0x2D55		; stack pointer
+sti
 
-	; setup stacks, TODO rescale these (also have [0x500,  0x2D50])
+; setup stacks, TODO rescale these (also have [0x500,  0x2D50])
 
-	mov AR_AREA_POINTER, 0x2D55
-	mov OPERAND_POINTER, 0x55AA
-	mov CURRENT_RECORD, AR_AREA_POINTER
-	mov word [CURRENT_END], start_of_end
+mov AR_AREA_POINTER, 0x2D55
+mov OPERAND_POINTER, 0x55AA
+
+; TEMP: write magic numbers before start of operand stack as canary
+mov word [OPERAND_POINTER - 2], 0x0008
+mov word [OPERAND_POINTER - 4], 0x0008
+mov word [OPERAND_POINTER - 6], 0x0008
+mov word [OPERAND_POINTER - 8], 0x0008
+mov word [OPERAND_POINTER - 10], 0x0008
+mov word [OPERAND_POINTER - 12], 0x0008
+mov word [OPERAND_POINTER - 14], 0x0008
+mov word [OPERAND_POINTER - 16], 0x0008
+
+mov CURRENT_RECORD, AR_AREA_POINTER
+mov word [CURRENT_END], start_of_end
 
 mov bx, STAGING
 call print_string

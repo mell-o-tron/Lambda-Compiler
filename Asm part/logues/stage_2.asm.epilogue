@@ -101,10 +101,104 @@ negate_bigint:
 	ret
 ; end negate_bigint
 
-divide_bigint:
-	; TODO: Do this
 
+_bigint_op_1:
+	dw 0, 0, 0, 0
+_bigint_op_2:
+	dw 0, 0, 0, 0
+_bigint_op_3:
+	dw 0, 0, 0, 0
+
+%macro _pop_bigint_to_working_memory 1
+	pop_operand eax
+	mov word [%1], ax
+	pop_operand eax
+	mov word [%1 + 2], ax
+	pop_operand eax
+	mov word [%1 + 4], ax
+	pop_operand eax
+	mov word [%1 + 6], ax
+%endmacro
+
+%macro _push_bigint_from_working_memory 1
+	push_operand [ %1 + 6 ]
+	push_operand [ %1 + 4 ]
+	push_operand [ %1 + 2 ]
+	push_operand [ %1 ]
+%endmacro
+
+_print_working_memories:
+	pusha
+	bufferize
+
+	_push_bigint_from_working_memory _bigint_op_3
+	_push_bigint_from_working_memory _bigint_op_2
+	_push_bigint_from_working_memory _bigint_op_1
+	print_stack
+
+	debufferize
+	popa
 	ret
+; end _print_working_memories
+
+divide_bigint:							  ; B1 / B2
+	push eax
+	
+	; put B2 in  _bigint_op_2
+	_pop_bigint_to_working_memory _bigint_op_2
+
+	; put B1 in  _bigint_op_1
+	_pop_bigint_to_working_memory _bigint_op_1
+
+	; initialize _bigint_op_3 to 0
+	mov word [_bigint_op_3], 0
+	mov word [_bigint_op_3 + 2], 0
+	mov word [_bigint_op_3 + 4], 0
+	mov word [_bigint_op_3 + 6], 0
+
+
+	subtraction_loop:
+		; get B1 from _bigint_op_1
+		_push_bigint_from_working_memory _bigint_op_1
+
+		;get B2 from _bigint_op_2
+		_push_bigint_from_working_memory _bigint_op_2
+
+										  ; stack: B1 B2
+		call cmp_bigintegers
+		jl subtraction_loop_end
+										  ; stack: -
+		; get B1 from _bigint_op_1
+		_push_bigint_from_working_memory _bigint_op_1
+										  ; stack: B1
+
+		; get B2 from _bigint_op_2
+		_push_bigint_from_working_memory _bigint_op_2
+										  ; stack: B1 B2
+
+		call negate_bigint
+		call add_bigintegers
+
+		_pop_bigint_to_working_memory _bigint_op_1
+
+		_push_bigint_from_working_memory _bigint_op_3
+
+		push_operand 0
+		push_operand 0
+		push_operand 0
+		push_operand 1
+
+		call add_bigintegers
+
+		_pop_bigint_to_working_memory _bigint_op_3
+		
+		jmp subtraction_loop
+	subtraction_loop_end:
+	
+	_push_bigint_from_working_memory _bigint_op_3
+
+	pop eax
+	ret ; 🐸
 ; end divide_bigint
 
 cmp_bigintegers:
