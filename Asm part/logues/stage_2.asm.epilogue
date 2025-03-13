@@ -1,3 +1,106 @@
+
+push_all_biginteger:
+
+	; print_stack
+						; BL BR
+	push ebx
+	; assume the biginteger lambda is on top of stack
+
+	dup_2operand		; BL BR BL BR
+	push_operand 3		; BL BR BL BR 3
+	make_record			; BL BR
+	call bx				; BL BR B3
+	debufferize
+
+	swizzle				; B3 BL BR
+
+	dup_2operand     	; B3 BL BR BL BR	
+	push_operand 2		; B3 BL BR BL BR 2
+	make_record			; B3 BL BR
+	call bx 			; B3 BL BR B2
+	debufferize
+
+	swizzle				; B3 B2 BL BR
+
+	dup_2operand			; B3 B2 BL BR BL BR
+	push_operand 1		; B3 B2 BL BR BL BR 1
+	make_record			; B3 B2 BL BR
+	call bx				; B3 B2 BL BR B1
+	debufferize
+
+	swizzle				; B3 B2 B1 BL BR
+
+	push_operand 0		; B3 B2 B1 BL BR 0
+	make_record			; B3 B2 B1
+	call bx				; B3 B2 B1 B0
+	debufferize
+
+	pop ebx
+	; print_stack
+	ret
+; end push_all_biginteger
+
+add_bigintegers:
+	mov word ax, [OPERAND_POINTER - 10]   ; LL 1
+	mov word bx, [OPERAND_POINTER - 2]    ; LL 2
+	add ax, bx
+	mov word [OPERAND_POINTER - 10], ax	  ; result to LL1
+
+	mov word ax, [OPERAND_POINTER - 12]   ; LH 1
+	mov word bx, [OPERAND_POINTER - 4]    ; LH 2
+	adc ax, bx
+	mov word [OPERAND_POINTER - 12], ax	  ; result to LH2
+
+	mov word ax, [OPERAND_POINTER - 14]   ; HL 1
+	mov word bx, [OPERAND_POINTER - 6]    ; HL 2
+	adc ax, bx
+	mov word [OPERAND_POINTER - 14], ax	  ; result to HL2
+
+	mov word ax, [OPERAND_POINTER - 16]   ; HH 1
+	mov word bx, [OPERAND_POINTER - 8]    ; HH 2
+	adc ax, bx
+	mov word [OPERAND_POINTER - 16], ax	  ; result to HH2
+
+	mov eax, OPERAND_POINTER
+	sub eax, 8
+	mov OPERAND_POINTER, eax
+	ret
+; end add_bigintegers
+
+negate_bigint:
+
+	mov word ax, [OPERAND_POINTER - 2]    ; LL
+	not ax
+	mov word [OPERAND_POINTER - 2], ax	  ; result to LL
+
+	mov word ax, [OPERAND_POINTER - 4]    ; LH
+	not ax
+	mov word [OPERAND_POINTER - 4], ax	  ; result to LH
+
+	mov word ax, [OPERAND_POINTER - 6]    ; HL
+	not ax
+	mov word [OPERAND_POINTER - 6], ax	  ; result to HL
+
+	mov word ax, [OPERAND_POINTER - 8]    ; HH
+	not ax
+	mov word [OPERAND_POINTER - 8], ax	  ; result to HH
+
+	mov eax, 0
+	push_operand eax
+
+	mov eax, 0
+	push_operand eax
+
+	mov eax, 0
+	push_operand eax
+
+	mov eax, 1
+	push_operand eax
+
+	call add_bigintegers
+	ret
+; end negate_bigint
+
 ; seekle here
 
 seekle:
@@ -54,67 +157,68 @@ printle:
 
 template_create_tuple:
 
-push ax
-pusha
+	push ax
+	pusha
 
-mov ax, [INT_RESULT]
-mov [templ_param_0], ax
+	mov ax, [INT_RESULT]
+	mov [templ_param_0], ax
 
-mov ax, [INT_RESULT + 2]
-mov [templ_param_1], ax
+	mov ax, [INT_RESULT + 2]
+	mov [templ_param_1], ax
 
-mov ax, [INT_RESULT + 4]
-mov [templ_param_2], ax
+	mov ax, [INT_RESULT + 4]
+	mov [templ_param_2], ax
 
-mov ax, [INT_RESULT + 6]
-mov [templ_param_3], ax
+	mov ax, [INT_RESULT + 6]
+	mov [templ_param_3], ax
 
-mov ax, [INT_RESULT + 8]
-mov [templ_param_4], ax
+	mov ax, [INT_RESULT + 8]
+	mov [templ_param_4], ax
 
-mov ax, [INT_RESULT + 10]
-mov [templ_param_5], ax
+	mov ax, [INT_RESULT + 10]
+	mov [templ_param_5], ax
 
-mov ax, [INT_RESULT + 12]
-mov [templ_param_6], ax
+	mov ax, [INT_RESULT + 12]
+	mov [templ_param_6], ax
 
-mov ax, [INT_RESULT + 14]
-mov [templ_param_7], ax
-
-
-xor eax, eax
-xor ebx, ebx
-mov ax, fckin_template
-mov bx, [CURRENT_END]
-mov [TEMPLATE_RESULT], bx
+	mov ax, [INT_RESULT + 14]
+	mov [templ_param_7], ax
 
 
-copy_loop:
+	xor eax, eax
+	xor ebx, ebx
+	mov ax, fckin_template
+	mov bx, [CURRENT_END]
+	mov [TEMPLATE_RESULT], bx
 
-; pusha
-; mov bx, ax
-; call print_dec
-; popa
 
-mov cx, [eax]
-mov [ebx], cx
-add ax, 2
-add bx, 2
+	copy_loop:
 
-cmp ax, fckin_end
-jb copy_loop
+	; pusha
+	; mov bx, ax
+	; call print_dec
+	; popa
 
-popa
-mov ax, [TEMPLATE_RESULT]
-push_operand eax
-pop ax
+	mov cx, [eax]
+	mov [ebx], cx
+	add ax, 2
+	add bx, 2
 
-pusha
-mov eax, [CURRENT_END]
-add eax, fckin_end - fckin_template + 2
-mov word [CURRENT_END], ax
-popa
-ret
+	cmp ax, fckin_end
+	jb copy_loop
+
+	popa
+	mov ax, [TEMPLATE_RESULT]
+	push_operand eax
+	pop ax
+
+	pusha
+	mov eax, [CURRENT_END]
+	add eax, fckin_end - fckin_template + 2
+	mov word [CURRENT_END], ax
+	popa
+	ret
+; end template_create_tuple
 
 
 fckin_template:
@@ -250,38 +354,39 @@ pusha
 mov ax, [OPERAND_POINTER - 2]   ; LL
 mov [bigint_templ_param_0], ax
 
-pusha
-mov bx, ax
-call print_dec
-popa
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
 
 mov ax, [OPERAND_POINTER - 4]   ; LH
 mov [bigint_templ_param_1], ax
 
-pusha
-mov bx, ax
-call print_dec
-popa
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
 
 mov ax, [OPERAND_POINTER - 6]   ; HL
 mov [bigint_templ_param_2], ax
 
-pusha
-mov bx, ax
-call print_dec
-popa
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
 
 mov ax, [OPERAND_POINTER - 8]   ; HH
 mov [bigint_templ_param_3], ax
 
-pusha
-mov bx, ax
-call print_dec
-popa
+; pusha
+; mov bx, ax
+; call print_dec
+; popa
 
 mov eax, OPERAND_POINTER
 sub eax, 8
 mov OPERAND_POINTER, eax
+bufferize
 
 xor eax, eax
 xor ebx, ebx
@@ -306,6 +411,7 @@ cmp ax, fckin_bigint_end
 jb bigint_copy_loop
 
 popa
+debufferize
 mov ax, [TEMPLATE_RESULT]
 push_operand eax
 pop ax

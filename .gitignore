@@ -58,3 +58,13 @@ _opam/
 # End of https://www.toptal.com/developers/gitignore/api/ocaml,visualstudiocode
 
 build
+.gdb_history
+parser copy.mly
+pi
+tests/banana
+tests/banana.asm
+tests/bc
+tests/benchmark.labmda
+tests/benchmark2.labmda
+tests/test_fibo
+tests/tri.py

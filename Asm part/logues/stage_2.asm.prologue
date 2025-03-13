@@ -43,8 +43,7 @@
 		mov %1, [OPERAND_POINTER]
 %endmacro
 
-%macro swizzle 0
-		; 1 2 3 -> 3 1 2
+%macro swizzle 0			; 1 2 3 -> 3 1 2
 		push eax
 		push ebx
 		
@@ -58,12 +57,12 @@
 
 		; modo B
 		
-		pop_operand eax	   ; 1 2
-		pop_operand ebx    ; 1
-		push ebx
-		pop_operand ebx    ; -
+		pop_operand eax	   ; 1 2   A = X3   []
+		pop_operand ebx    ; 1	   B = X2   []
+		push ebx		   ; 1     B = X2   [X2]
+		pop_operand ebx    ; -	   B' = X1  [X2]
  
-		push_operand eax   ; 3
+		push_operand eax   ; 3	   
 		push_operand ebx   ; 3 1
 		pop ebx
 		push_operand ebx   ; 3 1 2
@@ -76,18 +75,18 @@
 		pop eax
 %endmacro
 
-%macro dup_operand 0
+%macro dup_2operand 0			; X1 X2
 		push eax
 		push ebx
 
-		pop_operand eax
-		pop_operand ebx
+		pop_operand eax			; A = X2
+		pop_operand ebx			; B = X1
 		
-		push_operand ebx
-		push_operand eax
+		push_operand ebx		; X1
+		push_operand eax		; X1 X2
 		
-		push_operand ebx
-		push_operand eax
+		push_operand ebx		; X1 X2 X1
+		push_operand eax		; X1 X2 X1 X2
 
 		pop ebx
 		pop eax
@@ -121,102 +120,6 @@ pop edx
 push_operand eax
 %endmacro
 
-%macro push_all_biginteger 0
-
-push ebx
-; assume the biginteger lambda is on top of stack
-
-dup_operand
-push_operand 3
-make_record
-call bx
-debufferize
-
-swizzle
-
-dup_operand
-push_operand 2
-make_record
-call bx
-debufferize
-
-swizzle
-
-dup_operand
-push_operand 1
-make_record
-call bx
-debufferize
-
-swizzle
-
-push_operand 0
-make_record
-call bx
-debufferize
-
-pop ebx
-%endmacro
-
-%macro add_bigintegers 0
-mov word ax, [OPERAND_POINTER - 10]   ; LL 1
-mov word bx, [OPERAND_POINTER - 2]    ; LL 2
-add ax, bx
-mov word [OPERAND_POINTER - 10], ax	  ; result to LL1
-
-mov word ax, [OPERAND_POINTER - 12]   ; LH 1
-mov word bx, [OPERAND_POINTER - 4]    ; LH 2
-adc ax, bx
-mov word [OPERAND_POINTER - 12], ax	  ; result to LH2
-
-mov word ax, [OPERAND_POINTER - 14]   ; HL 1
-mov word bx, [OPERAND_POINTER - 6]    ; HL 2
-adc ax, bx
-mov word [OPERAND_POINTER - 14], ax	  ; result to HL2
-
-mov word ax, [OPERAND_POINTER - 16]   ; HH 1
-mov word bx, [OPERAND_POINTER - 8]    ; HH 2
-adc ax, bx
-mov word [OPERAND_POINTER - 16], ax	  ; result to HH2
-
-mov eax, OPERAND_POINTER
-sub eax, 8
-mov OPERAND_POINTER, eax
-%endmacro
-
-%macro negate_bigint 0
-
-mov word ax, [OPERAND_POINTER - 2]    ; LL
-not ax
-mov word [OPERAND_POINTER - 2], ax	  ; result to LL
-
-mov word ax, [OPERAND_POINTER - 4]    ; LH
-not ax
-mov word [OPERAND_POINTER - 4], ax	  ; result to LH
-
-mov word ax, [OPERAND_POINTER - 6]    ; HL
-not ax
-mov word [OPERAND_POINTER - 6], ax	  ; result to HL
-
-mov word ax, [OPERAND_POINTER - 8]    ; HH
-not ax
-mov word [OPERAND_POINTER - 8], ax	  ; result to HH
-
-mov eax, 0
-push_operand eax
-
-mov eax, 0
-push_operand eax
-
-mov eax, 0
-push_operand eax
-
-mov eax, 1
-push_operand eax
-
-add_bigintegers
-
-%endmacro
 
 %macro 	make_record 0
 
@@ -234,9 +137,9 @@ add_bigintegers
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 ;
-		;pusha
-		;print_cur_record
-		;popa
+		; pusha
+		; print_cur_record
+		; popa
 %endmacro
 
 %macro 	make_HO_record 0
@@ -263,7 +166,7 @@ add_bigintegers
 
 %endmacro
 
-%macro 	make_funky_record 0
+%macro 	make_funky_record 0 ;🕺
 		add AR_AREA_POINTER, 8
 
 		pop_operand ax								; par_def_record
@@ -315,6 +218,74 @@ add_bigintegers
 
 	pusha
 	mov bx, [CURRENT_RECORD + 6]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, NEW_LINE
+	call print_string
+	popa
+%endmacro
+
+%macro print_stack 0
+
+	pusha
+	mov bx, [OPERAND_POINTER - 2]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 4]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 6]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 8]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 10]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 12]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 14]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 16]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 18]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 20]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 22]
+	call print_dec
+	popa
+
+	pusha
+	mov bx, [OPERAND_POINTER - 24]
 	call print_dec
 	popa
 

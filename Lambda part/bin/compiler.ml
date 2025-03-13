@@ -95,18 +95,18 @@ and compile_bigexp (e) (depth) = match e with
     | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
       (fst c1 ^ fst c2 ^ 
       
-      "add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
+      "call add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
   )
   | BigUnop (op, e) -> ( match op with
     | BigNeg -> let c = (pushall_bigint e depth) in
       (fst c ^
 
-      "negate_bigint\ncreate_bigint\n", snd c)
+      "call negate_bigint\ncreate_bigint\n", snd c)
     )
   
 and pushall_bigint (e) (depth) =
   let c = compile e depth in
-  (fst c ^ "push_all_biginteger\n", snd c)
+  (fst c ^ "call push_all_biginteger\n", snd c)
   
 
 

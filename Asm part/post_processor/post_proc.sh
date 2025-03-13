@@ -13,6 +13,10 @@ perl -0777 -pe 's/push_operand ([0-9]+)\npop_operand (a|b)x/;optimized\nmov $2x,
 
 perl -0777 -pe 's/push_operand eax\npop_operand bx/;(push-pop optimized away)\nmov bx, ax/sg' tmp1 > out.asm
 
+perl -0777 -pe 's/create_bigint\ncall push_all_biginteger/;(biginteger push pop optimized away)/sg' out.asm > final_output.asm
+
+mv final_output.asm out.asm
+
 rm tmp
 rm tmp1
 
