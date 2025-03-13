@@ -35,16 +35,16 @@
 %token Die
 %token SayHere
 %token Comma Semicolon
-%token BigInt BigPlus BigMinus
+%token BigInt BigPlus BigMinus BigTimes BigDiv BigNeq BigEq BigLAngle BigRAngle BigLeq BigGeq
 
 /* Precedence and associativity specification */
 %nonassoc   Else
 %left       And Or
-%left       Equals LAngle RAngle Leq Neq Geq
-%right      Not Minus BigMinus
+%left       Equals LAngle RAngle Leq Neq Geq BigNeq BigEq BigLAngle BigRAngle BigLeq BigGeq
+%right      Not Minus BigMinus 
 %left       Plus BigPlus
-%left       Times
-%left       Div
+%left       Times BigTimes
+%left       Div BigDiv
 %right      Lambda Lambdas
 
 /* Starting symbol */
@@ -116,6 +116,7 @@ aexpr:
 bigexpr:
   | BigInt LParens n = num_maybeneg RParens         {Ast.BigInt(n)}
   | e1 = expr op = bigbinop e2 = expr               {Ast.BigBinop(op, e1, e2)}
+  | e1 = expr op = bigcomp e2 = expr                {Ast.BigCompare(op, e1, e2)}
   | op = bigunop e = expr                           {Ast.BigUnop(op, e)}
   
 %inline aunop:
@@ -129,6 +130,8 @@ bigexpr:
 
 %inline bigbinop:
   | BigPlus                                         {Ast.BigPlus}
+  | BigTimes                                        {Ast.BigTimes}
+  | BigDiv                                          {Ast.BigDiv}
 
 %inline bigunop:
   | BigMinus                                        {Ast.BigNeg}
@@ -153,3 +156,11 @@ bexpr:
   | RAngle                          {Ast.GreaterThan}
   | Leq                             {Ast.LessEqual}
   | Geq                             {Ast.GreaterEqual}
+
+%inline bigcomp:
+  | BigEq                           {Ast.BigEquals}
+  | BigNeq                          {Ast.BigNotEqual}
+  | BigLAngle                       {Ast.BigLessThan}
+  | BigRAngle                       {Ast.BigGreaterThan}
+  | BigLeq                          {Ast.BigLessEqual}
+  | BigGeq                          {Ast.BigGreaterEqual}

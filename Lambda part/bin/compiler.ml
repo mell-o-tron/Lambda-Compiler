@@ -92,10 +92,12 @@ let rec compile (e: exp) (depth:int) = (match e with
 and compile_bigexp (e) (depth) = match e with
   | BigInt(i) -> compile_bigint(i)(depth)
   | BigBinop (op, e1, e2) -> ( match op with
-    | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
+    | BigPlus -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in    (* WRANGZ!!!! *)
       (fst c1 ^ fst c2 ^ 
       
       "call add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
+
+    | _ -> failwith("this bigbinop is not implemented")
   )
   | BigUnop (op, e) -> ( match op with
     | BigNeg -> let c = (pushall_bigint e depth) in
@@ -103,6 +105,22 @@ and compile_bigexp (e) (depth) = match e with
 
       "call negate_bigint\ncreate_bigint\n", snd c)
     )
+  | BigCompare (op, e1, e2) -> 
+      let op = (match op with 
+                | BigEquals        -> "jne" 
+                | BigLessThan      -> "jge"
+                | BigGreaterThan   -> "jle"
+                | BigLessEqual     -> "jg"
+                | BigGreaterEqual  -> "jl"
+                | BigNotEqual      -> "je"
+    (*             | _ -> failwith("bigcomparator not yet implemented") *)
+              ) in
+              let c1 = compile e1 (depth) in
+              let c2 = compile e2 (depth) in
+              let l1 = fresh_jmp() ^ "_cmp_fail" in
+              let l2 = fresh_jmp() ^ "_end_cmp" in
+              ( fst c1 ^ fst c2 ^ "pop_operand bx\ncall push_all_bigint\npop_operand ax\ncall push_all_bigint\ncall cmp_bigintegers \n" ^ op ^ " " ^ l1 ^ "\npush_operand 1 ; cmp true\njmp " ^ l2 ^ "\n"^ l1 ^":\npush_operand 0 ; cmp false\n" ^ l2 ^ ":\n",
+                snd c1 ^ snd c2 ))
   
 and pushall_bigint (e) (depth) =
   let c = compile e depth in

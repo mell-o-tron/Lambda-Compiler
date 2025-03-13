@@ -3,7 +3,7 @@ type aunop = Neg
 type abinop = Plus | Times | Div
 [@@deriving show]
 
-type bigbinop = BigPlus
+type bigbinop = BigPlus | BigTimes | BigDiv
 [@@deriving show]
 
 type bigunop = BigNeg
@@ -14,6 +14,9 @@ type bunop = Not
 type bbinop = And | Or
 [@@deriving show]
 type comparator = Equals | LessThan | GreaterThan | LessEqual | GreaterEqual | NotEqual
+[@@deriving show]
+
+type bigcomparator = BigEquals | BigLessThan | BigGreaterThan | BigLessEqual | BigGreaterEqual | BigNotEqual
 [@@deriving show]
 
 (* Syntax of the language *)
@@ -32,6 +35,7 @@ and bigexp =
   | BigInt      of int    (*Maybe use strings or ocaml bigints to initialize bigger ints*)
   | BigBinop    of bigbinop * exp * exp
   | BigUnop     of bigunop * exp
+  | BigCompare  of bigcomparator * exp * exp
   [@@deriving show]
 and exp =
   | Lambda      of exp

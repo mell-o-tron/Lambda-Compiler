@@ -101,6 +101,37 @@ negate_bigint:
 	ret
 ; end negate_bigint
 
+divide_bigint:
+	; TODO: Do this
+
+	ret
+; end divide_bigint
+
+cmp_bigintegers:
+	mov word ax, [OPERAND_POINTER - 16]   ; HH 1
+	mov word bx, [OPERAND_POINTER - 8]    ; HH 2
+	cmp ax, bx
+	jne cmp_bigintegers_end
+
+	mov word ax, [OPERAND_POINTER - 14]   ; HL 1
+	mov word bx, [OPERAND_POINTER - 6]    ; HL 2
+	cmp ax, bx
+	jne cmp_bigintegers_end
+
+	mov word ax, [OPERAND_POINTER - 12]   ; LH 1
+	mov word bx, [OPERAND_POINTER - 4]    ; LH 2
+	cmp ax, bx
+	jne cmp_bigintegers_end
+
+	mov word ax, [OPERAND_POINTER - 10]   ; LL 1
+	mov word bx, [OPERAND_POINTER - 2]    ; LL 2
+	cmp ax, bx
+	jne cmp_bigintegers_end
+
+	cmp_bigintegers_end:
+	ret
+;end 
+
 ; seekle here
 
 seekle:
