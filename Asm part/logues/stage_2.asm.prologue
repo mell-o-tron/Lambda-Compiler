@@ -122,7 +122,8 @@ push_operand eax
 
 
 %macro 	make_record 0
-
+		push eax
+		xor eax, eax
 		add AR_AREA_POINTER, 8
 		mov [AR_AREA_POINTER + 6], word 0			; non-function check
 		pop_operand ax								; argument
@@ -136,13 +137,14 @@ push_operand eax
 
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
-;
-		; pusha
+
 		; print_cur_record
-		; popa
+		pop eax
 %endmacro
 
 %macro 	make_HO_record 0
+		push eax
+		xor eax, eax
 		add AR_AREA_POINTER, 8
 
 		pop_operand ax								; par_def_record
@@ -160,13 +162,13 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 
-; 		pusha
-; 		print_cur_record
-; 		popa
-
+		; print_cur_record
+		pop eax
 %endmacro
 
 %macro 	make_funky_record 0 ;🕺
+		push eax
+		xor eax, eax
 		add AR_AREA_POINTER, 8
 
 		pop_operand ax								; par_def_record
@@ -184,10 +186,8 @@ push_operand eax
 
 		mov CURRENT_RECORD, AR_AREA_POINTER
 
-; 		pusha
 ; 		print_cur_record
-; 		popa
-
+		pop eax
 %endmacro
 
 %macro print_cur_record 0
@@ -299,7 +299,7 @@ push_operand eax
 %macro 	say_here 0
 	pusha
 	mov bx, HERE_STRING
-	pusha
+	pusha						; TODO: Why the double pusha?
 	call near print_string
 	popa
 	popa
@@ -355,21 +355,27 @@ push_operand eax
 %endmacro
 
 %macro bufferize 0
+	push eax
+	xor eax, eax
 	mov ax, word [CURRENT_RECORD]
 	mov [CURRENT_RECORD_BUF], ax
 	mov eax, OPERAND_POINTER
 	mov [OPERAND_POINTER_BUF], ax
 	mov eax, AR_AREA_POINTER
 	mov [AR_AREA_POINTER_BUF], ax
+	pop eax
 %endmacro
 
 %macro debufferize 0
+	push eax
+	xor eax, eax
 	mov ax, [AR_AREA_POINTER_BUF]
 	mov AR_AREA_POINTER, eax
 	mov ax, [CURRENT_RECORD_BUF]
 	mov CURRENT_RECORD, eax
 	mov ax, [OPERAND_POINTER_BUF]
 	mov OPERAND_POINTER, eax
+	pop eax
 %endmacro
 
 %macro call_interrupt 1
@@ -445,6 +451,7 @@ mov word [OPERAND_POINTER - 14], 0x0008
 mov word [OPERAND_POINTER - 16], 0x0008
 
 mov CURRENT_RECORD, AR_AREA_POINTER
+bufferize
 mov word [CURRENT_END], start_of_end
 
 mov bx, STAGING

@@ -29,7 +29,7 @@
 %token LIndex GIndex
 %token If Then Else
 %token Apply
-%token Ycomb
+%token Ycomb HOYcomb
 %token HOApply
 %token Interrupt
 %token Die
@@ -90,6 +90,22 @@ expr:
                                                               (Ast.HOApply ((Ast.Var 1),
                                                                   (Ast.Lambda
                                                                     (Ast.Apply ((Ast.HOApply ((Ast.Var 1), (Ast.Var 1))),
+                                                                        (Ast.Var 0))))
+                                                                  )))
+                                                            )))
+                                                      }
+  | HOYcomb                                           {(Ast.Lambda
+                                                        (Ast.HOApply (
+                                                            (Ast.Lambda
+                                                              (Ast.HOApply ((Ast.Var 1),
+                                                                  (Ast.Lambda
+                                                                    (Ast.HOApply ((Ast.HOApply ((Ast.Var 1), (Ast.Var 1))),
+                                                                        (Ast.Var 0))))
+                                                                  ))),
+                                                            (Ast.Lambda
+                                                              (Ast.HOApply ((Ast.Var 1),
+                                                                  (Ast.Lambda
+                                                                    (Ast.HOApply ((Ast.HOApply ((Ast.Var 1), (Ast.Var 1))),
                                                                         (Ast.Var 0))))
                                                                   )))
                                                             )))

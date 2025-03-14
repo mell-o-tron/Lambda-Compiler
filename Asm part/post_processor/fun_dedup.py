@@ -47,8 +47,8 @@ print(len(funz))
 
 for k, v in grouped_funz.items():
     for f_v in v[1:]:
-        prog = prog.replace(funz[f_v-1][1], '')
-        prog = prog.replace(f'fun_{f_v}:;end_fun_{f_v}\n\n', '')
+        prog = prog.replace(f'fun_{f_v}:{funz[f_v-1][1]}', '')
+        prog = prog.replace(f';end_fun_{f_v}\n\n', '')
         prog = prog.replace(f'fun_{v[0]}:', f'fun_{v[0]}:\nfun_{f_v}:')
         
 with open(filename, 'w') as f:

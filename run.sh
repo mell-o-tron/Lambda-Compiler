@@ -24,4 +24,4 @@ then
 fi
 
 cd "$SCRIPT_DIR/Asm part"
-make
+make all

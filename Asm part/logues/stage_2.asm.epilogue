@@ -157,6 +157,7 @@ divide_bigint:							  ; B1 / B2
 	mov word [_bigint_op_3 + 6], 0
 
 
+	call _print_working_memories
 	subtraction_loop:
 		; get B1 from _bigint_op_1
 		_push_bigint_from_working_memory _bigint_op_1
@@ -166,7 +167,7 @@ divide_bigint:							  ; B1 / B2
 
 										  ; stack: B1 B2
 		call cmp_bigintegers
-		jl subtraction_loop_end
+		jb subtraction_loop_end
 										  ; stack: -
 		; get B1 from _bigint_op_1
 		_push_bigint_from_working_memory _bigint_op_1
@@ -194,12 +195,76 @@ divide_bigint:							  ; B1 / B2
 		
 		jmp subtraction_loop
 	subtraction_loop_end:
+	call _print_working_memories
 	
 	_push_bigint_from_working_memory _bigint_op_3
 
 	pop eax
 	ret ; 🐸
 ; end divide_bigint
+
+multiply_bigint:							  ; B1 * B2
+	push eax
+	
+	; put B2 in  _bigint_op_2
+	push_operand -1
+	push_operand -1
+	push_operand -1
+	push_operand -1
+	call add_bigintegers
+	_pop_bigint_to_working_memory _bigint_op_3
+
+	; put B1 in  _bigint_op_1
+	_pop_bigint_to_working_memory _bigint_op_1
+
+	; initialize _bigint_op_3 to 0
+	_push_bigint_from_working_memory _bigint_op_1
+	_pop_bigint_to_working_memory _bigint_op_2
+
+
+	summation_loop:
+		; call _print_working_memories
+		; get B1 from _bigint_op_1
+		_push_bigint_from_working_memory _bigint_op_3
+		push_operand 0
+		push_operand 0
+		push_operand 0
+		push_operand 0
+
+		call cmp_bigintegers
+		jbe summation_loop_end
+										  ; stack: -
+		; get B1 from _bigint_op_1
+		_push_bigint_from_working_memory _bigint_op_1
+										  ; stack: B1
+
+		; get B2 from _bigint_op_2
+		_push_bigint_from_working_memory _bigint_op_2
+										  ; stack: B1 B2
+
+		call add_bigintegers
+
+		_pop_bigint_to_working_memory _bigint_op_1
+
+		_push_bigint_from_working_memory _bigint_op_3
+
+		push_operand -1
+		push_operand -1
+		push_operand -1
+		push_operand -1
+
+		call add_bigintegers
+
+		_pop_bigint_to_working_memory _bigint_op_3
+		
+		jmp summation_loop
+	summation_loop_end:
+	
+	_push_bigint_from_working_memory _bigint_op_1
+
+	pop eax
+	ret ; 🐸
+; end multiply_bigint
 
 cmp_bigintegers:
 	mov word ax, [OPERAND_POINTER - 16]   ; HH 1
@@ -229,7 +294,32 @@ cmp_bigintegers:
 	popf
 
 	ret
-;end 
+; end cmp_bigintegers
+
+print_biginteger:
+	call push_all_biginteger
+	print_stack
+	_pop_bigint_to_working_memory _bigint_op_1
+	mov bx, [_bigint_op_1 + 6]
+	pusha
+	call print_dec
+	popa
+	mov bx, [_bigint_op_1 + 4]
+	pusha
+	call print_dec
+	popa
+	mov bx, [_bigint_op_1 + 2]
+	pusha
+	call print_dec
+	popa
+	mov bx, [_bigint_op_1]
+	pusha
+	call print_dec
+	popa
+	ret
+; end cmp_bigintegers
+
+
 
 ; seekle here
 
@@ -281,6 +371,7 @@ printle:
 		call print_dec
 		popa
 	ret
+; end printle
 
 
 ; template_create_tuple
@@ -516,7 +607,8 @@ mov [bigint_templ_param_3], ax
 mov eax, OPERAND_POINTER
 sub eax, 8
 mov OPERAND_POINTER, eax
-bufferize
+mov eax, OPERAND_POINTER
+mov [OPERAND_POINTER_BUF], ax
 
 xor eax, eax
 xor ebx, ebx
@@ -541,7 +633,10 @@ cmp ax, fckin_bigint_end
 jb bigint_copy_loop
 
 popa
-debufferize
+
+mov ax, [OPERAND_POINTER_BUF]
+mov OPERAND_POINTER, eax
+
 mov ax, [TEMPLATE_RESULT]
 push_operand eax
 pop ax

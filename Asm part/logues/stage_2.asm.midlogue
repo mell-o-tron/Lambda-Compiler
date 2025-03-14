@@ -1,9 +1,9 @@
 
 ; test print
 
-pop_operand bx
-call print_dec
-
+; pop_operand bx
+; call print_dec
+call print_biginteger
 
 
 mov bx, END_STRING

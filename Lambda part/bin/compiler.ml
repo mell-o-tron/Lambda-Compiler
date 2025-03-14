@@ -97,9 +97,13 @@ and compile_bigexp (e) (depth) = match e with
       "call add_bigintegers\ncreate_bigint\n", snd c1 ^ snd c2)
     | BigDiv -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
     (fst c1 ^ fst c2 ^ 
-      "call divide_bigint\ncreate_bigint\n", snd c1 ^ snd c2)  
+      "call divide_bigint\ncreate_bigint\n", snd c1 ^ snd c2)
+    | BigTimes -> let c1 = (pushall_bigint e1 depth) in let c2 = (pushall_bigint e2 depth) in
+    (fst c1 ^ fst c2 ^ 
+      "call multiply_bigint\ncreate_bigint\n", snd c1 ^ snd c2)
+      
 
-    | _ -> failwith("this bigbinop is not implemented")
+    (* | _ -> failwith("this bigbinop is not implemented") *)
   )
   | BigUnop (op, e) -> ( match op with
     | BigNeg -> let c = (pushall_bigint e depth) in
