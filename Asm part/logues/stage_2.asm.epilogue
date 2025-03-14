@@ -41,6 +41,8 @@ push_all_biginteger:
 ; end push_all_biginteger
 
 add_bigintegers:
+	push eax
+	push ebx
 	mov word ax, [OPERAND_POINTER - 10]   ; LL 1
 	mov word bx, [OPERAND_POINTER - 2]    ; LL 2
 	add ax, bx
@@ -64,6 +66,8 @@ add_bigintegers:
 	mov eax, OPERAND_POINTER
 	sub eax, 8
 	mov OPERAND_POINTER, eax
+	pop ebx
+	pop eax
 	ret
 ; end add_bigintegers
 
@@ -143,6 +147,25 @@ _print_working_memories:
 
 divide_bigint:							  ; B1 / B2
 	push eax
+	push ebx
+
+	xor ebx, ebx
+	mov eax, [OPERAND_POINTER - 8]  		  ; HH 2
+	cmp eax, 0
+	jge bigint_div_no_negate_2
+	xor ebx, 1
+	call negate_bigint
+	bigint_div_no_negate_2:
+
+	_pop_bigint_to_working_memory _bigint_op_3
+
+	mov eax, [OPERAND_POINTER - 8]  		  ; HH 1
+	cmp eax, 0
+	jge bigint_div_no_negate_1
+	xor ebx, 1
+	call negate_bigint
+	bigint_div_no_negate_1:
+	_push_bigint_from_working_memory _bigint_op_3
 	
 	; put B2 in  _bigint_op_2
 	_pop_bigint_to_working_memory _bigint_op_2
@@ -199,14 +222,38 @@ divide_bigint:							  ; B1 / B2
 	
 	_push_bigint_from_working_memory _bigint_op_3
 
+	cmp ebx, 0
+	je divide_bigint_end
+	call negate_bigint
+	divide_bigint_end:
+
+	pop ebx
 	pop eax
 	ret ; 🐸
 ; end divide_bigint
 
 multiply_bigint:							  ; B1 * B2
 	push eax
-	
-	; put B2 in  _bigint_op_2
+	push ebx
+
+	xor ebx, ebx
+	mov eax, [OPERAND_POINTER - 8]  		  ; HH 2
+	cmp eax, 0
+	jge bigint_mul_no_negate_2
+	xor ebx, 1
+	call negate_bigint
+	bigint_mul_no_negate_2:
+
+	_pop_bigint_to_working_memory _bigint_op_3
+
+	mov eax, [OPERAND_POINTER - 8]  		  ; HH 1
+	cmp eax, 0
+	jge bigint_mul_no_negate_1
+	xor ebx, 1
+	call negate_bigint
+	bigint_mul_no_negate_1:
+	_push_bigint_from_working_memory _bigint_op_3
+
 	push_operand -1
 	push_operand -1
 	push_operand -1
@@ -214,10 +261,8 @@ multiply_bigint:							  ; B1 * B2
 	call add_bigintegers
 	_pop_bigint_to_working_memory _bigint_op_3
 
-	; put B1 in  _bigint_op_1
 	_pop_bigint_to_working_memory _bigint_op_1
 
-	; initialize _bigint_op_3 to 0
 	_push_bigint_from_working_memory _bigint_op_1
 	_pop_bigint_to_working_memory _bigint_op_2
 
@@ -261,12 +306,21 @@ multiply_bigint:							  ; B1 * B2
 	summation_loop_end:
 	
 	_push_bigint_from_working_memory _bigint_op_1
+	
+	cmp ebx, 0
+	je multiply_bigint_end
+	call negate_bigint
+	multiply_bigint_end:
 
+	pop ebx
 	pop eax
 	ret ; 🐸
 ; end multiply_bigint
 
 cmp_bigintegers:
+	push eax
+	push ebx
+
 	mov word ax, [OPERAND_POINTER - 16]   ; HH 1
 	mov word bx, [OPERAND_POINTER - 8]    ; HH 2
 	cmp ax, bx
@@ -293,6 +347,8 @@ cmp_bigintegers:
 	sub OPERAND_POINTER, 16
 	popf
 
+	pop ebx
+	pop eax
 	ret
 ; end cmp_bigintegers
 

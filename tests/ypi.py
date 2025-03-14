@@ -1,3 +1,6 @@
+import sys
+iters = 15 if argc < 2 else int(sys.argv[1])
+
 Y = lambda f: (lambda x: x(x))(lambda y: f(lambda z: y(y)(z)))
 
 def print_and_continue(text, f):
@@ -27,4 +30,4 @@ Y(lambda f: (lambda x:
 
 pi = lambda L1 : lambda L0 : 1 if L0 == 0 else ((1/(1+(L0*2)) + L1(L0-1)) if L0 % 2 == 0 else -1/(1+(L0*2)) + L1(L0-1))
 
-print(Y(pi)(13) * 4)
+print(Y(pi)(iters) * 4)

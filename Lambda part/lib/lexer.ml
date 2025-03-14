@@ -12,6 +12,7 @@ let rec token lexbuf =
         | "@"                 -> (Apply)
         | "m@"                -> (MultiApply)
         | "$"                 -> (HOApply)
+        | "m$"                -> (MultiHOApply)
         | "("                 -> (LParens)
         | ")"                 -> (RParens)
         | "["                 -> (LSquare)

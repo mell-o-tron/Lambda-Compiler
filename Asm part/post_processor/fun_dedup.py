@@ -47,7 +47,10 @@ print(len(funz))
 
 for k, v in grouped_funz.items():
     for f_v in v[1:]:
-        prog = prog.replace(f'fun_{f_v}:{funz[f_v-1][1]}', '')
+        funz_f_v = next(f for f in funz if f[0] == f_v)
+        if funz_f_v[1] not in prog:
+            continue
+        prog = prog.replace(f'fun_{f_v}:{funz_f_v[1]}', '')
         prog = prog.replace(f';end_fun_{f_v}\n\n', '')
         prog = prog.replace(f'fun_{v[0]}:', f'fun_{v[0]}:\nfun_{f_v}:')
         

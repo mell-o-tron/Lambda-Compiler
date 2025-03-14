@@ -42,6 +42,7 @@ and exp =
   | Lambdas     of int * exp
   | Apply       of exp * exp
   | MultiApply  of exp * exp list
+  | MultiHOApply  of exp * exp list
   | HOApply     of exp * exp
   | IfThenElse  of exp * exp * exp
   | Aexp        of aexp
@@ -52,4 +53,5 @@ and exp =
   | Switch      of exp list * int
   | Die
   | SayHere     of exp
+  | Loop        of exp * exp
   [@@deriving show]

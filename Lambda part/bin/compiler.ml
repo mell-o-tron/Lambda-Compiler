@@ -25,6 +25,12 @@ let rec compile (e: exp) (depth:int) = (match e with
       | []    -> compile(e1) (depth)
       | x::xs -> compile(MultiApply (Apply(e1, x), xs))(depth)
   )
+  | MultiHOApply (e1, l) -> ( match l with
+      | []    -> compile(e1) (depth)
+      | x::xs -> compile(MultiHOApply (HOApply(e1, x), xs))(depth)
+  )
+
+  | Loop (_, _) -> failwith("[REDACTED]")
   
   | Lambda e1   ->  (
     let c = compile(e1)(depth + 1) in let funname = fresh_name() in ("push_operand "^funname^"\n" ^ "push_operand CURRENT_RECORD\n", 
